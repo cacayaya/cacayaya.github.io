@@ -1,0 +1,5 @@
+baseURL = "http://cacayaya.github.io"
+languageCode = "en-us"
+title = "Yifan Wang's Site"
+theme = "eureka"
+publishDir = "/docs"
