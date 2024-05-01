@@ -43,15 +43,14 @@ widget:
     attachment: 
 ---
 
-## About Me
-I'm a second year Ph.D. student at [Purdue University](https://www.purdue.edu/) under the supervision of Prof. Ananth Grama. Prior to that, I completed my undergraduate studies in Electronic Information Engineering with a minor in Artificial intelligence at the [University of Science and Technology of China](http://en.ustc.edu.cn/). [[CV]](https://drive.google.com/file/d/1FR2Yadg3FdQy9loAyvuELjd-FlW5nYQa/view?usp=share_link)
-
-
+## About Me 
+I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) under the supervision of Prof. Ananth Grama. Prior to that, I completed my undergraduate studies in Electronic Information Engineering with a minor in Artificial intelligence at the [University of Science and Technology of China](http://en.ustc.edu.cn/). [[CV]](https://drive.google.com/file/d/1FR2Yadg3FdQy9loAyvuELjd-FlW5nYQa/view?usp=share_link)
 
 **Research interests:**
-* Machine Learning, especially Biologically-inspired Machine Learning and Trustworthy Machine Learning
+* Machine Learning, especially Trustworthy ML and Efficient ML.
 * Complex Network and Evolutionary Game Theory
 
 ## NEWS
+* May, 2024. I'm thrilled to start my internship at **Texas Instrument**!
 * Apr, 2023. "Learning Functional Distributions with Private Labels" is accepted by **ICML2023**!
 
