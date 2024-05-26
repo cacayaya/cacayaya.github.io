@@ -8,7 +8,16 @@
     <language>en</language>
     <copyright>&amp;copy; 2023 Yifan Wang 
 </copyright>
-    <lastBuildDate>Tue, 23 May 2023 16:31:26 -0400</lastBuildDate><atom:link href="https://cacayaya.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 01 Sep 2023 16:47:05 -0400</lastBuildDate><atom:link href="https://cacayaya.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hello</title>
+      <link>https://cacayaya.github.io/docs/hello/</link>
+      <pubDate>Fri, 01 Sep 2023 16:47:05 -0400</pubDate>
+      
+      <guid>https://cacayaya.github.io/docs/hello/</guid>
+      <description>Hello!</description>
+    </item>
+    
     <item>
       <title>CV</title>
       <link>https://cacayaya.github.io/cv/</link>
