@@ -10,6 +10,15 @@
 </copyright>
     <lastBuildDate>Tue, 23 May 2023 16:31:26 -0400</lastBuildDate><atom:link href="https://cacayaya.github.io/authors/yifan-wang/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>A Theory of Fault-Tolerant Learning</title>
+      <link>https://cacayaya.github.io/projects/a-theory-of-fault-tolerant-learning/</link>
+      <pubDate>Tue, 23 May 2023 16:31:26 -0400</pubDate>
+      
+      <guid>https://cacayaya.github.io/projects/a-theory-of-fault-tolerant-learning/</guid>
+      <description>Developing machine learning models that account for potential faults encountered in real-world environments presents a fundamental challenge for mission-critical applications. In this paper, we introduce a novel theoretical framework grounded in learning theory for dealing with faults. In particular, we propose a framework called fault-tolerant PAC learning, aimed at identifying the most fault-tolerant models from a given hypothesis class (such as neural networks). We show that if faults occur randomly, fault-tolerant learning is equivalent to regular PAC learning.</description>
+    </item>
+    
+    <item>
       <title>Learning Functional Distributions with Private Labels</title>
       <link>https://cacayaya.github.io/projects/learning_functional_distributions/</link>
       <pubDate>Tue, 23 May 2023 16:31:26 -0400</pubDate>
