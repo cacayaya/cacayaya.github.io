@@ -4,7 +4,7 @@ draft: false
 # Section you want to display
 section: projects
 # Pages count
-count: 1
+count: 2
 # Options: card, plain and masonry.
 style: card
 
