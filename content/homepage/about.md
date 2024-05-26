@@ -48,9 +48,9 @@ I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) u
 
 **Research interests:**
 * Machine Learning, especially Trustworthy ML and Efficient ML.
-* Complex Network and Evolutionary Game Theory
 
 ## NEWS
 * May, 2024. I'm thrilled to start my internship at **Texas Instrument**!
-* Apr, 2023. "Learning Functional Distributions with Private Labels" is accepted by **ICML2023**!
+* May, 2024. "A Theory of Fault-Tolerant Learning" is accepted by **ICML 2024**!
+* Apr, 2023. "Learning Functional Distributions with Private Labels" is accepted by **ICML 2023**!
 

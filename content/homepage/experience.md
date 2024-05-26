@@ -2,28 +2,16 @@
 title: Experience
 draft: false
 experiences:
-  - title: Captain, women's football team
+  - title: Machine Learning Research Intern
     organization:
-      name: College of Engineering Sciences, USTC
+      name: Texas Instruments
       # url: https://example.org
-    dates: "2019 - 2021"
+    dates: "2024.5 - 2024.8"
     # location: Country
     writeup: >
-      - Represent school in provincial and national competitions, winning the championship in Anhui Province.
-
-      - Organized weekly football trainings and team social events, and led team to participate in more than 15 football competitions per year.
+      - contribute to build TI LLM for code generation
 
 
-  - title: Leader, debating team
-    organization:
-      name: College of Engineering Sciences, USTC
-      # url: https://example.org
-    dates: "2019 - 2020"
-    location: Country
-    writeup: >
-      - Participate in more than ten debate competitions every year. 
-
-      - Coordinated debate competitions and training workshops for first-year students.
 weight: 3
 widget:
   handler: experience
