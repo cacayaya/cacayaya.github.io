@@ -44,7 +44,7 @@ widget:
 ---
 
 ## About Me 
-I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) under the supervision of Prof. Ananth Grama. Prior to that, I completed my undergraduate studies in Electronic Information Engineering with a minor in Artificial intelligence at the [University of Science and Technology of China](http://en.ustc.edu.cn/). [[CV]](https://drive.google.com/file/d/1FR2Yadg3FdQy9loAyvuELjd-FlW5nYQa/view?usp=share_link)
+I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) under the supervision of Prof. Ananth Grama. Prior to that, I completed my undergraduate studies in Electronic Information Engineering with a minor in Artificial intelligence at the [University of Science and Technology of China](http://en.ustc.edu.cn/). [[CV]](https://drive.google.com/file/d/1ZtTGymPAfETK9LGfv4clg6Y19ODMzcCh/view?usp=sharing)
 
 **Research interests:**
 * Machine Learning, especially Trustworthy ML and Efficient ML.
