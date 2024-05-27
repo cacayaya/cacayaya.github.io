@@ -18,9 +18,9 @@ draft: false
 
 ## Work Experience
 
-- *2024.5 - 2024.8* &#160;**Machine Learning Research Intern, Texas Instruments**
-  - contribute to build TI LLM for code generation
-
+- *2024.5 - 2024.8* &#160;** Texas Instruments**
+  - Machine Learning Research Intern
+  
 ## Research Experience
 - *2022.9 - present* &#160;**Purdue University**
   - Research assistant, advised by Prof. Ananth Grama.
