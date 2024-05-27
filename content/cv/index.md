@@ -18,7 +18,7 @@ draft: false
 
 ## Work Experience
 
-- *2024.5 - 2024.8* &#160;** Texas Instruments**
+- *2024.5 - 2024.8* &#160;**Texas Instruments**
   - Machine Learning Research Intern
   
 ## Research Experience
