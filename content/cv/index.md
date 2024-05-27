@@ -29,12 +29,10 @@ draft: false
 - *2020.5 - 2022.5* &#160;**Laboratory of cognitive neuropsychology, University of Science and Technology of China**
   - Research assistant, advised by Prof. Junjie Bu.
 
-
 ## Awards
 - *2022* &#8195; First Prize (Team) at Trustworthy Machine Learning Challenge 2022
 - *2021* &#8195; Interdisciplinary Contest In Modeling Honorable Mention
 - *2020* &#8195; Silver Prize for Outstanding Student Scholarship (top 10% at USTC)
-- *2020* &#8195; First Prize (Team) at 2020 USTC Innovation Contest on Energy Saving & Emission Reduction
 - *2019* &#8195; Second Prize for Papers competition on electromagnetics
 - *2018* &#8195; Excellent Academic Paper Accolade in science and society Seminar (25/1800)
 
