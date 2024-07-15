@@ -51,6 +51,6 @@ I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) u
 
 ## NEWS
 * May, 2024. I'm thrilled to start my internship at **Texas Instrument**!
-* May, 2024. "A Theory of Fault-Tolerant Learning" is accepted by **ICML 2024**!
+* May, 2024. "A Theory of Fault-Tolerant Learning" is accepted by **ICML 2024 (spotlight 3.5\%)** !
 * Apr, 2023. "Learning Functional Distributions with Private Labels" is accepted by **ICML 2023**!
 
