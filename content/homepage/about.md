@@ -5,8 +5,8 @@ role: Ph.D Student
 avatar: icon.png
 bio: 
 organization:
-  name: Purdue University
-  url: https://www.purdue.edu/
+  name: Google Scholar
+  url: https://scholar.google.com/citations?user=hqL5jWYAAAAJ&hl=en
 social:
   - icon: envelope
     iconPack: fas
