@@ -25,6 +25,13 @@
       <description>Developing machine learning models that account for potential faults encountered in real-world environments presents a fundamental challenge for mission-critical applications. In this paper, we introduce a novel theoretical framework grounded in learning theory for dealing with faults. In particular, we propose a framework called fault-tolerant PAC learning, aimed at identifying the most fault-tolerant models from a given hypothesis class (such as neural networks). We show that if faults occur randomly, fault-tolerant learning is equivalent to regular PAC learning.</description>
     </item>
     <item>
+      <title>Deconvolving Complex Neuronal Networks into Interpretable Task-Specific Connectomes</title>
+      <link>https://cacayaya.github.io/projects/deconvolve_connectomes/</link>
+      <pubDate>Thu, 25 Jan 2024 16:31:26 -0400</pubDate>
+      <guid>https://cacayaya.github.io/projects/deconvolve_connectomes/</guid>
+      <description>Task-specific functional MRI (fMRI) images provide excellent modalities for studying the neuronal basis of cognitive processes. We use fMRI data to formulate and solve the problem of deconvolving task-specific aggregate neuronal networks into a set of basic building blocks called canonical networks, to use these networks for functional characterization, and to characterize the physiological basis of these responses by mapping them to regions of the brain. Our results show excellent task-specificity of canonical networks, i.e., the expression of a small number of canonical networks can be used to accurately predict tasks; generalizability across cohorts, i.</description>
+    </item>
+    <item>
       <title>Learning Functional Distributions with Private Labels</title>
       <link>https://cacayaya.github.io/projects/learning_functional_distributions/</link>
       <pubDate>Tue, 23 May 2023 16:31:26 -0400</pubDate>
