@@ -8,8 +8,15 @@
     <language>en</language>
     <copyright>&amp;copy; 2023 Yifan Wang 
 </copyright>
-    <lastBuildDate>Sat, 25 May 2024 16:31:26 -0400</lastBuildDate>
+    <lastBuildDate>Fri, 02 Aug 2024 11:16:51 -0500</lastBuildDate>
     <atom:link href="https://cacayaya.github.io/authors/yifan-wang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cascade reward sampling for efficient decoding-time alignment</title>
+      <link>https://cacayaya.github.io/projects/cards/</link>
+      <pubDate>Fri, 02 Aug 2024 11:16:51 -0500</pubDate>
+      <guid>https://cacayaya.github.io/projects/cards/</guid>
+      <description>Aligning large language models (LLMs) with human preferences is critical for their deployment. Recently, decoding-time alignment has emerged as an effective plug-and-play technique that requires no fine-tuning of model parameters. However, generating text that achieves both high reward and high likelihood remains a significant challenge. Existing methods often fail to generate high-reward text or incur substantial computational costs. In this paper, we propose Cascade Reward Sampling (CARDS) to address both issues, guaranteeing the generation of high-reward and high-likelihood text with significantly low costs.</description>
+    </item>
     <item>
       <title>A Theory of Fault-Tolerant Learning</title>
       <link>https://cacayaya.github.io/projects/a-theory-of-fault-tolerant-learning/</link>
