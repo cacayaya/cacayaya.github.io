@@ -6,12 +6,13 @@ experiences:
     organization:
       name: Texas Instruments
       # url: https://example.org
-    dates: "2024.5 - 2024.8"
+    dates: "2024.5 - 2024.12"
     # location: Country
     writeup: >
-      - contribute to build TI LLM for code generation
-
-
+      - Fine-tuned TI’s LLM for code generation, improving performance by 59\% over base model.
+      - Enhanced LLM performance through implementation of multimodal RAG system
+      - Built an AI agent system integrating code generation, self-debugging compiler, and RAG to streamline development workflows.      
+      
 weight: 3
 widget:
   handler: experience
