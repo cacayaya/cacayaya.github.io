@@ -10,7 +10,9 @@ experiences:
     # location: Country
     writeup: >
       - Fine-tuned TI’s LLM for code generation, improving performance by 59\% over base model.
-      - Enhanced LLM performance through implementation of multimodal RAG system
+      
+      - Enhanced LLM performance through implementation of multimodal RAG system.
+      
       - Built an AI agent system integrating code generation, self-debugging compiler, and RAG to streamline development workflows.      
       
 weight: 3
