@@ -71,6 +71,9 @@ module.exports = {
           },
         },
       }),
+      backgroundImage: {
+        'footer': "url('/images/your-new-footer-image.jpg')",
+      },
     },
   },
   plugins: [require("@tailwindcss/typography"), require("tailwindcss-rtl")],

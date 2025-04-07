@@ -1,26 +1,27 @@
 ---
 title: Experience
 draft: false
+section: experiences
 experiences:
   - title: Machine Learning Research Intern
     organization:
       name: Texas Instruments
       # url: https://example.org
-    dates: "2024.5 - 2024.12"
+    dates: "2024.5 - 2024.12 (8 months)"
     # location: Country
     writeup: >
-      - Fine-tuned TI’s LLM for code generation, improving performance by 59\% over base model.
+      - Fine-tuned TI’s **LLM** for **code generation**, improving performance by 59\% over base model.
       
-      - Enhanced LLM performance through implementation of multimodal RAG system.
+      - Enhanced LLM performance through implementation of multimodal **RAG** system.
       
-      - Built an AI agent system integrating code generation, self-debugging compiler, and RAG to streamline development workflows.      
-      
-weight: 3
+      - Built an **AI agent** system integrating code generation, self-debugging compiler, and RAG to streamline development workflows.      
+
+weight: 2
 widget:
   handler: experience
 
   # Options: sm, md, lg and xl. Default is md.
-  width: lg
+  width: xl
 
   sidebar:
     # Options: left and right. Leave blank to hide.

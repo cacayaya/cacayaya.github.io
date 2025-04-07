@@ -23,7 +23,7 @@ widget:
   handler: about
 
   # Options: sm, md, lg and xl. Default is md.
-  width:
+  width: xl
 
   sidebar:
     # Options: left and right. Leave blank to hide.
@@ -46,11 +46,29 @@ widget:
 ## About Me 
 I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) under the supervision of Prof. Ananth Grama. Prior to that, I completed my undergraduate studies in Electronic Information Engineering with a minor in Artificial intelligence at the [University of Science and Technology of China](http://en.ustc.edu.cn/). [[CV]](https://drive.google.com/file/d/1ZtTGymPAfETK9LGfv4clg6Y19ODMzcCh/view?usp=sharing)
 
-**Research interests:**
+#### Research interests:
 * Machine Learning, especially Trustworthy ML and Efficient ML.
 
-## NEWS
+## Publication List
+**More is Less: The Pitfalls of Multi-Model Synthetic Preference Data in DPO Safety Alignment**\
+**Yifan Wang**, Runjin Chen, Bolian Li, David Cho, Yihe Deng, Ruqi Zhang, Tianlong Chen, Zhangyang Wang, Ananth Grama, Junyuan Hong
+
+**Cascade reward sampling for efficient decoding-time alignment**\
+Bolian Li*, **Yifan Wang\***, Ananth Grama, Ruqi Zhang
+
+**Deconvolving Complex Neuronal Networks into Interpretable Task-Specific Connectomes**\
+**Yifan Wang**, Vikram Ravindra, Ananth Grama
+
+**A Theory of Fault-Tolerant Learning**\
+Changlong Wu, **Yifan Wang**, Ananth Grama\
+International Conference on Machine Learning (ICML), 2024 **(Spotlight 3.5%)**
+
+**Learning Functional Distributions with Private Labels**\
+Changlong Wu, **Yifan Wang**, Ananth Grama, Wojciech Szpankowski\
+International Conference on Machine Learning (ICML), 2023
+
+<!-- ## NEWS
 * May, 2024. I'm thrilled to start my internship at **Texas Instrument**!
 * May, 2024. "A Theory of Fault-Tolerant Learning" is accepted by **ICML 2024 (spotlight 3.5\%)** !
-* Apr, 2023. "Learning Functional Distributions with Private Labels" is accepted by **ICML 2023**!
+* Apr, 2023. "Learning Functional Distributions with Private Labels" is accepted by **ICML 2023**! -->
 

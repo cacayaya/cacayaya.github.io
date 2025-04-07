@@ -3,3 +3,6 @@ languageCode = "en-us"
 title = "Yifan Wang's Site"
 theme = "eureka"
 publishDir = "./docs"
+
+[params]
+  customCSS = ["css/custom.css"]
