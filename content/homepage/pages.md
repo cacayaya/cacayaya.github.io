@@ -1,5 +1,5 @@
 ---
-title: Projects
+title: Personal Projects
 draft: false
 # Section you want to display
 section: projects
@@ -14,6 +14,15 @@ widget:
 
   # Options: sm, md, lg and xl. Default is md.
   width: xl
+
+  # Add these options to control content display
+  content:
+    # Show just the title and summary
+    type: excerpt
+    # How many words to include in summary
+    length: 50
+    # Truncate at word boundary
+    truncate: true
 
   sidebar:
     # Options: left and right. Leave blank to hide.

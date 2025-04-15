@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  dir="ltr"
+  
+><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<title>BiteEmo App Development | Yifan Wang</title>
+
+<meta name="generator" content="Hugo Eureka 0.9.3" />
+<link rel="stylesheet" href="https://cacayaya.github.io/css/eureka.min.9cec6350e37e534b0338fa9a085bf06855de3b0f2dcf857e792e5e97b07ea905d4d5513db554cbc26a9c3da622bae92d.css">
+<script defer src="https://cacayaya.github.io/js/eureka.min.fa9a6bf6d7a50bb635b4cca7d2ba5cf3dfb095ae3798773f1328f7950028b48c17d06276594e1b5f244a25a6c969a705.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload"
+  href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&amp;family=Noto&#43;Serif&#43;SC:wght@400;600;700&amp;display=swap"
+  as="style" onload="this.onload=null;this.rel='stylesheet'">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/styles/base16/solarized-light.min.css"
+   media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/highlight.min.js"
+   crossorigin></script>
+  <script defer src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.4.0/build/languages/dart.min.js"
+     crossorigin></script>
+<link rel="stylesheet" href="https://cacayaya.github.io/css/highlightjs.min.2958991528e43eb6fc9b8c4f2b8e052f79c4010718e1d1e888a777620e9ee63021c2c57ec7417a3108019bb8c41943e6.css" media="print" onload="this.media='all';this.onload=null">
+
+
+<script defer type="text/javascript" src="https://cacayaya.github.io/js/fontawesome.min.1853a524ca39729ab933ec9ed36c061ff97ab42d22bfb99eebbff3b8df0476a351eea2822c6447a461ca0fbc56183b11.js"></script>
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.css"
+   integrity="sha384-MlJdn/WNKDGXveldHDdyRP1R4CTHr3FeuDNfhsLPYrq2t0UBkUdK2jyTnXPEK1NQ"  media="print"
+  onload="this.media='all';this.onload=null" crossorigin>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/katex.min.js" 
+  integrity="sha384-VQ8d8WVFw0yHhCk5E8I86oOhv48xLpnDZx5T9GogA/Y84DcCKWXDmSDfn13bzFZY"  crossorigin></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.15.2/dist/contrib/auto-render.min.js"
+   integrity="sha384-&#43;XBljXPPiv&#43;OzfbB3cVmLHf4hdUFHlWNZN5spNQ7rmHTXpd7WvJum6fIACpNNfIR"  crossorigin></script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    renderMathInElement(document.body, {
+      delimiters: [
+        { left: "$$", right: "$$", display: true },
+        { left: "$", right: "$", display: false },
+        { left: "\\(", right: "\\)", display: false },
+        { left: "\\[", right: "\\]", display: true }
+      ],
+    });
+  });
+</script>
+
+
+<script defer src="https://cdn.jsdelivr.net/npm/mermaid@8.14.0/dist/mermaid.min.js" 
+  integrity="sha384-atOyb0FxAgN9LyAc6PEf9BjgwLISyansgdH8/VXQH8p2o5vfrRgmGIJ2Sg22L0A0"  crossorigin></script>
+
+
+<link rel="icon" type="image/png" sizes="32x32" href="https://cacayaya.github.io/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_32x32_fill_box_center_3.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://cacayaya.github.io/images/icon_hu64421c6c7700f606f0ad45d807017b09_5843_180x180_fill_box_center_3.png">
+
+<meta name="description"
+  content="For a long time, I&rsquo;ve observed something quite common around me: most people aren&rsquo;t struggling with their weight because they don&rsquo;t know what to eat or how to exercise. Instead, it&rsquo;s often emotional issues—stress from work, social pressures, or just feeling down—that trigger unhealthy eating behaviors. Managing these emotions, rather than merely counting calories or forcing workouts into an already busy schedule, can be the key to better health.
+From my own experience, writing down my thoughts and feelings—doing what I call a &ldquo;brain dump&rdquo;—has always been incredibly therapeutic.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [{
+      "@type": "ListItem",
+      "position": 1 ,
+      "name":"Projects",
+      "item":"https://cacayaya.github.io/projects/"},{
+      "@type": "ListItem",
+      "position": 2 ,
+      "name":"BiteEmo App Development",
+      "item":"https://cacayaya.github.io/projects/biteemo/"}]
+}
+</script>
+
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://cacayaya.github.io/projects/biteemo/"
+    },
+    "headline": "BiteEmo App Development | Yifan Wang",
+    "image": "https://cacayaya.github.io/images/app_icon.png",
+    "datePublished": "2025-04-15T14:54:03-04:00",
+    "dateModified": "2025-04-15T14:54:03-04:00",
+    "wordCount":  566 ,
+    "publisher": {
+        "@type": "Person",
+        "name": "Yifan Wang",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://cacayaya.github.io/images/icon.png"
+        }
+        },
+    "description": "For a long time, I\u0026rsquo;ve observed something quite common around me: most people aren\u0026rsquo;t struggling with their weight because they don\u0026rsquo;t know what to eat or how to exercise. Instead, it\u0026rsquo;s often emotional issues—stress from work, social pressures, or just feeling down—that trigger unhealthy eating behaviors. Managing these emotions, rather than merely counting calories or forcing workouts into an already busy schedule, can be the key to better health.\nFrom my own experience, writing down my thoughts and feelings—doing what I call a \u0026ldquo;brain dump\u0026rdquo;—has always been incredibly therapeutic."
+}
+</script><meta property="og:title" content="BiteEmo App Development | Yifan Wang" />
+<meta property="og:type" content="article" />
+
+
+<meta property="og:image" content="https://cacayaya.github.io/images/icon.png">
+
+
+<meta property="og:url" content="https://cacayaya.github.io/projects/biteemo/" />
+
+
+
+
+<meta property="og:description" content="For a long time, I&rsquo;ve observed something quite common around me: most people aren&rsquo;t struggling with their weight because they don&rsquo;t know what to eat or how to exercise. Instead, it&rsquo;s often emotional issues—stress from work, social pressures, or just feeling down—that trigger unhealthy eating behaviors. Managing these emotions, rather than merely counting calories or forcing workouts into an already busy schedule, can be the key to better health.
+From my own experience, writing down my thoughts and feelings—doing what I call a &ldquo;brain dump&rdquo;—has always been incredibly therapeutic." />
+
+
+
+
+<meta property="og:locale" content="en" />
+
+
+
+
+<meta property="og:site_name" content="Yifan Wang" />
+
+
+
+
+
+
+<meta property="article:published_time" content="2025-04-15T14:54:03-04:00" />
+
+
+<meta property="article:modified_time" content="2025-04-15T14:54:03-04:00" />
+
+
+
+<meta property="article:section" content="projects" />
+
+
+
+
+
+  <body class="flex min-h-screen flex-col">
+    <header
+      class="min-h-16 pl-scrollbar bg-secondary-bg fixed z-50 flex w-full items-center shadow-sm"
+    >
+      <div class="mx-auto w-full max-w-screen-xl"><script>
+    let storageColorScheme = localStorage.getItem("lightDarkMode")
+    if (((storageColorScheme == 'Auto' || storageColorScheme == null) && window.matchMedia("(prefers-color-scheme: dark)").matches) || storageColorScheme == "Dark") {
+        document.getElementsByTagName('html')[0].classList.add('dark')
+    }
+</script>
+<nav class="flex items-center justify-between flex-wrap px-4 py-4 md:py-0">
+    <a href="/" class="me-6 text-primary-text text-xl font-bold">Yifan Wang</a>
+    <button id="navbar-btn" class="md:hidden flex items-center px-3 py-2" aria-label="Open Navbar">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="target"
+        class="hidden block md:flex md:grow md:justify-between md:items-center w-full md:w-auto text-primary-text z-20">
+        <div class="md:flex md:h-16 text-sm md:grow pb-4 md:pb-0 border-b md:border-b-0">
+            <a href="/#about" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">ABOUT</a>
+            <a href="/projects/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  selected-menu-item  me-4">PROJECTS</a>
+            <a href="/cv/" class="block mt-4 md:inline-block md:mt-0 md:h-(16-4px) md:leading-(16-4px) box-border md:border-t-2 md:border-b-2  border-transparent  me-4">CV</a>
+        </div>
+
+        <div class="flex">
+            <div class="relative pt-4 md:pt-0">
+                <div class="cursor-pointer hover:text-eureka" id="lightDarkMode">
+                    <i class="fas fa-adjust"></i>
+                </div>
+                <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-30" id="is-open">
+                </div>
+                <div class="absolute flex flex-col start-0 md:start-auto end-auto md:end-0 hidden bg-secondary-bg w-48 rounded py-2 border border-tertiary-bg cursor-pointer z-40"
+                    id='lightDarkOptions'>
+                    <span class="px-4 py-1 hover:text-eureka" name="Light">Light</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Dark">Dark</span>
+                    <span class="px-4 py-1 hover:text-eureka" name="Auto">Auto</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed hidden inset-0 opacity-0 h-full w-full cursor-default z-0" id="is-open-mobile">
+    </div>
+
+</nav>
+<script>
+    
+    let element = document.getElementById('lightDarkMode')
+    if (storageColorScheme == null || storageColorScheme == 'Auto') {
+        document.addEventListener('DOMContentLoaded', () => {
+            window.matchMedia("(prefers-color-scheme: dark)").addEventListener('change', switchDarkMode)
+        })
+    } else if (storageColorScheme == "Light") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'sun')
+        element.firstElementChild.classList.add('fa-sun')
+    } else if (storageColorScheme == "Dark") {
+        element.firstElementChild.classList.remove('fa-adjust')
+        element.firstElementChild.setAttribute("data-icon", 'moon')
+        element.firstElementChild.classList.add('fa-moon')
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        getcolorscheme();
+        switchBurger();
+    });
+</script>
+</div>
+    </header>
+    <main class="grow pt-16">
+        <div class="pl-scrollbar">
+          <div class="mx-auto w-full max-w-screen-xl lg:px-4 xl:px-8">
+  
+  
+  <div class="grid grid-cols-2 gap-4 lg:grid-cols-8 lg:pt-12">
+    <div
+      class="lg:col-start-2 bg-secondary-bg col-span-2 rounded px-6 py-8 lg:col-span-6"
+    >
+      <article class="prose">
+  <h1 class="mb-4">BiteEmo App Development</h1>
+
+  <div
+  class="text-tertiary-text not-prose mt-2 flex flex-row flex-wrap items-center"
+>
+  <div class="me-6 my-2">
+    <i class="fas fa-calendar me-1"></i>
+    <span
+      >2025-04-15</span
+    >
+  </div>
+  <div class="me-6 my-2">
+    <i class="fas fa-clock me-1"></i>
+    <span>3 min read</span>
+  </div>
+
+  
+
+  
+</div>
+
+
+  
+  
+    <img src="https://cacayaya.github.io/images/app_icon.png" class="w-full" alt="Featured Image">
+  
+
+  <p>For a long time, I&rsquo;ve observed something quite common around me: most people aren&rsquo;t struggling with their weight because they don&rsquo;t know what to eat or how to exercise. Instead, it&rsquo;s often emotional issues—stress from work, social pressures, or just feeling down—that trigger unhealthy eating behaviors. Managing these emotions, rather than merely counting calories or forcing workouts into an already busy schedule, can be the key to better health.</p>
+<p>From my own experience, writing down my thoughts and feelings—doing what I call a &ldquo;brain dump&rdquo;—has always been incredibly therapeutic. It quickly brings clarity and emotional relief. Likewise, talking with friends has helped me immensely, but the reality is, friends can&rsquo;t always be there at every moment we need them. This realization inspired me to create <strong>BiteEmo</strong>.</p>
+<h2 id="what-is-biteemo">What is BiteEmo?</h2>
+<p>BiteEmo is a simple, personal app designed to help us become more aware of our emotions, especially right before we eat. The idea is straightforward: if we can pause and notice our feelings before we start eating, especially during moments of emotional eating or bingeing, we might have a chance to address the underlying emotion rather than simply coping with food.</p>
+<h2 id="how-biteemo-can-help">How BiteEmo Can Help</h2>
+<p>Here&rsquo;s what BiteEmo helps you do:</p>
+<ul>
+<li>
+<p><strong>Note your mood and meals:</strong> Take a moment before you eat to quickly log how you&rsquo;re feeling and snap a photo of your meal. This small pause encourages mindful eating and emotional awareness.</p>
+</li>
+<li>
+<p><strong>Chat anytime with a supportive AI:</strong> I built an AI chat feature specially trained to help with emotional eating. Unlike human friends, the AI is always there, providing immediate comfort and understanding whenever you need it.</p>
+</li>
+<li>
+<p><strong>See your emotional patterns:</strong> You can log your weight and easily observe how your moods relate to weight changes over time. Seeing these patterns can be enlightening—like noticing how periods of high stress might correlate with weight gain.</p>
+</li>
+<li>
+<p><strong>Keep detailed records:</strong> BiteEmo allows you to download all your logged notes and emotions. If you decide to seek professional help, these records can offer valuable insights to therapists or dieticians.</p>
+</li>
+<li>
+<p><strong>Future plans:</strong> I&rsquo;m also considering adding multimodal AI to help calculate calorie content directly from meal photos, making the app even more comprehensive.</p>
+</li>
+</ul>
+<h2 id="the-development-journey">The Development Journey</h2>
+<p>Before this project, I knew nothing about app development, but tools like LLMs and Cursor have paved the way for efficient learning and implementation. The entire development process—from idea to functioning app—happened in just one week. It&rsquo;s incredible how the learning curve has flattened in the AI era, making it easier than ever to transform ideas into reality!</p>
+<h3 id="my-1-week-app-development-roadmap">My 1-Week APP Development Roadmap:</h3>
+<ol>
+<li>
+<p><strong>Product Conceptualization</strong>: Defining the core problem and designing a solution focused on emotional eating awareness.</p>
+</li>
+<li>
+<p><strong>Learning Swift/Xcode</strong>: Diving into iOS development fundamentals with no prior experience.</p>
+</li>
+<li>
+<p><strong>Development Workflow</strong>: Using Cursor to write code efficiently while testing in Xcode.</p>
+</li>
+<li>
+<p><strong>AI Integration</strong>: Deploying LLM server for the AI chat feature, using open source models.</p>
+</li>
+<li>
+<p><strong>Secure Access</strong>: Implementing Ngrok to create a secure tunnel to my local server, providing a public URL that the iOS app could access from anywhere.</p>
+</li>
+<li>
+<p><strong>User Authentication</strong>: Implementing Firebase Auth for secure login functionality.</p>
+</li>
+<li>
+<p><strong>Data Management</strong>: Setting up Firebase Realtime Database for efficient storage and retrieval of user data.</p>
+</li>
+<li>
+<p><strong>Distribution</strong>: Creating an Apple Developer account and navigating the App Store Connect review process to distribute the app.</p>
+</li>
+</ol>
+<h2 id="have-a-try">Have a try!</h2>
+<p>You can download the <strong>BiteEmo</strong> app from the Apple App Store (for iOS only), it&rsquo;s completely free!</p>
+
+</article>
+
+
+      
+
+      
+
+
+
+      
+
+      
+
+      
+
+
+
+    </div>
+    
+
+    
+    
+  </div>
+
+  
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        hljs.highlightAll();
+      });
+    </script>
+
+          </div>
+        </div>
+      
+    </main>
+    <footer class="pl-scrollbar">
+      <div class="mx-auto w-full max-w-screen-xl"><div class="text-center p-6 pin-b">
+    <p class="text-sm text-tertiary-text">&copy; 2023 Yifan Wang 
+ &middot;  Powered by the <a href="https://github.com/wangchucheng/hugo-eureka" class="hover:text-eureka">Eureka</a> theme for <a href="https://gohugo.io" class="hover:text-eureka">Hugo</a></p>
+</div></div>
+    </footer>
+  </body>
+</html>
