@@ -56,5 +56,9 @@ Before this project, I knew nothing about app development, but tools like LLMs a
 
 You can download the **BiteEmo** app from the Apple App Store (for iOS only), it's completely free!
 
+## Contact
+
+For questions, feedback, or support regarding BiteEmo, please feel free to reach out to me at: [yifanwang@gmail.com](mailto:yifanwang@gmail.com)
+
 
 
