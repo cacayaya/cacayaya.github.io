@@ -51,7 +51,7 @@ I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) u
 
 ## Publication List
 **From Low Rank Gradient Subspace Stabilization to Low-Rank Weights: Observations, Theories, and Applications**\
-**Ajay Jaiswal*, Yifan Wang\***, Lu Yin, Shiwei Liu, Runjin Chen, Jiawei Zhao, Ananth Grama, Yuandong Tian, Zhangyang Wang
+Ajay Jaiswal*, **Yifan Wang\***, Lu Yin, Shiwei Liu, Runjin Chen, Jiawei Zhao, Ananth Grama, Yuandong Tian, Zhangyang Wang
 International Conference on Machine Learning (ICML), 2025
 
 **More is Less: The Pitfalls of Multi-Model Synthetic Preference Data in DPO Safety Alignment**\
