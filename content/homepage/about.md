@@ -47,10 +47,10 @@ widget:
 I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) under the supervision of Prof. Ananth Grama. Prior to that, I completed my undergraduate studies in Electronic Information Engineering with a minor in Artificial intelligence at the [University of Science and Technology of China](http://en.ustc.edu.cn/). [[CV]](https://drive.google.com/file/d/1ZtTGymPAfETK9LGfv4clg6Y19ODMzcCh/view?usp=sharing)
 
 #### Research interests:
-* My research focuses on LLM post-training, particularly on synthetic data generation, reward modeling, and self-improvement.
+* My research focuses on LLM post-training, particularly on synthetic data generation, reward modeling and self-improvement.
 
 ## Publication List
-**From Low Rank Gradient Subspace Stabilization to Low-Rank Weights: Observations, Theories, and Applications**
+**From Low Rank Gradient Subspace Stabilization to Low-Rank Weights: Observations, Theories, and Applications**\
 **Ajay Jaiswal*, Yifan Wang\***, Lu Yin, Shiwei Liu, Runjin Chen, Jiawei Zhao, Ananth Grama, Yuandong Tian, Zhangyang Wang
 International Conference on Machine Learning (ICML), 2025
 
