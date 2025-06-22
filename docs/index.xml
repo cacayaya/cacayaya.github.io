@@ -25,11 +25,39 @@
       <description>For a long time, I&amp;rsquo;ve observed something quite common around me: most people aren&amp;rsquo;t struggling with their weight because they don&amp;rsquo;t know what to eat or how to exercise. Instead, it&amp;rsquo;s often emotional issues—stress from work, social pressures, or just feeling down—that trigger unhealthy eating behaviors. Managing these emotions, rather than merely counting calories or forcing workouts into an already busy schedule, can be the key to better health.&#xA;From my own experience, writing down my thoughts and feelings—doing what I call a &amp;ldquo;brain dump&amp;rdquo;—has always been incredibly therapeutic.</description>
     </item>
     <item>
+      <title>Cascade reward sampling for efficient decoding-time alignment</title>
+      <link>https://cacayaya.github.io/projects/cards/</link>
+      <pubDate>Fri, 02 Aug 2024 11:16:51 -0500</pubDate>
+      <guid>https://cacayaya.github.io/projects/cards/</guid>
+      <description>Aligning large language models (LLMs) with human preferences is critical for their deployment. Recently, decoding-time alignment has emerged as an effective plug-and-play technique that requires no fine-tuning of model parameters. However, generating text that achieves both high reward and high likelihood remains a significant challenge. Existing methods often fail to generate high-reward text or incur substantial computational costs. In this paper, we propose Cascade Reward Sampling (CARDS) to address both issues, guaranteeing the generation of high-reward and high-likelihood text with significantly low costs.</description>
+    </item>
+    <item>
       <title>CV</title>
       <link>https://cacayaya.github.io/cv/</link>
       <pubDate>Sat, 25 May 2024 16:39:28 -0400</pubDate>
       <guid>https://cacayaya.github.io/cv/</guid>
       <description>Education 2022-Present Ph.D in Computer Science, Purdue University 2018-2022 B.E. in Electronic Information Engineering, University of Science and Technology of China Work Experience 2024.5 - 2024.8 Texas Instruments Machine Learning Research Intern Research Experience 2022.9 - present Purdue University Research assistant, advised by Prof. Ananth Grama. 2021.6 - 2022.6 Institute for Artificial Intelligence, Peking University Research intern, advised by Prof. Aming Li. 2020.5 - 2022.5 Laboratory of cognitive neuropsychology, University of Science and Technology of China Research assistant, advised by Prof.</description>
+    </item>
+    <item>
+      <title>A Theory of Fault-Tolerant Learning</title>
+      <link>https://cacayaya.github.io/projects/a-theory-of-fault-tolerant-learning/</link>
+      <pubDate>Sat, 25 May 2024 16:31:26 -0400</pubDate>
+      <guid>https://cacayaya.github.io/projects/a-theory-of-fault-tolerant-learning/</guid>
+      <description>Developing machine learning models that account for potential faults encountered in real-world environments presents a fundamental challenge for mission-critical applications. In this paper, we introduce a novel theoretical framework grounded in learning theory for dealing with faults. In particular, we propose a framework called fault-tolerant PAC learning, aimed at identifying the most fault-tolerant models from a given hypothesis class (such as neural networks). We show that if faults occur randomly, fault-tolerant learning is equivalent to regular PAC learning.</description>
+    </item>
+    <item>
+      <title>Deconvolving Complex Neuronal Networks into Interpretable Task-Specific Connectomes</title>
+      <link>https://cacayaya.github.io/projects/deconvolve_connectomes/</link>
+      <pubDate>Thu, 25 Jan 2024 16:31:26 -0400</pubDate>
+      <guid>https://cacayaya.github.io/projects/deconvolve_connectomes/</guid>
+      <description>Task-specific functional MRI (fMRI) images provide excellent modalities for studying the neuronal basis of cognitive processes. We use fMRI data to formulate and solve the problem of deconvolving task-specific aggregate neuronal networks into a set of basic building blocks called canonical networks, to use these networks for functional characterization, and to characterize the physiological basis of these responses by mapping them to regions of the brain. Our results show excellent task-specificity of canonical networks, i.e., the expression of a small number of canonical networks can be used to accurately predict tasks; generalizability across cohorts, i.</description>
+    </item>
+    <item>
+      <title>Learning Functional Distributions with Private Labels</title>
+      <link>https://cacayaya.github.io/projects/learning_functional_distributions/</link>
+      <pubDate>Tue, 23 May 2023 16:31:26 -0400</pubDate>
+      <guid>https://cacayaya.github.io/projects/learning_functional_distributions/</guid>
+      <description>We study the problem of learning functional distributions in the presence of noise. The functional is a map from features to distributions over a set of labels and is assumed to belong to a known class of hypotheses. Features are generated by a general random process and labels are sampled independently from the feature-dependent distributions and then passed through a noisy kernel. We consider online learning where at each time step a predictor attempts to predict the actual (label) distribution given only the features revealed so far and noisy labels in prior steps.</description>
     </item>
     <item>
       <title>Chapter 1</title>
