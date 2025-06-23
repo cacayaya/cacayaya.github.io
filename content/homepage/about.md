@@ -44,9 +44,11 @@ widget:
 ---
 
 ## About Me 
-I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) under the supervision of Prof. Ananth Grama. Prior to that, I completed my undergraduate studies in Electronic Information Engineering with a minor in Artificial intelligence at the [University of Science and Technology of China](http://en.ustc.edu.cn/). [[CV]](https://drive.google.com/file/d/1ZtTGymPAfETK9LGfv4clg6Y19ODMzcCh/view?usp=sharing)
+I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) under the supervision of Prof. Ananth Grama. Prior to that, I completed my undergraduate studies in Electronic Information Engineering with a minor in Artificial intelligence at the [University of Science and Technology of China](http://en.ustc.edu.cn/). 
 
-#### Research interests:
+<!-- [[CV]](https://drive.google.com/file/d/1ZtTGymPAfETK9LGfv4clg6Y19ODMzcCh/view?usp=sharing) -->
+
+#### Research interests
 * My research focuses on LLM post-training, particularly on synthetic data generation, reward modeling and self-improvement.
 
 ## Publication List
