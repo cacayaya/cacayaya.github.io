@@ -68,6 +68,7 @@ Conference on Language Modeling (COLM), 2025
 
 [**Deconvolving Complex Neuronal Networks into Interpretable Task-Specific Connectomes**](https://arxiv.org/abs/2407.00201)\
 **Yifan Wang**, Vikram Ravindra, Ananth Grama
+ACM Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB), 2025
 
 [**A Theory of Fault-Tolerant Learning**](https://openreview.net/pdf?id=ooh8tkXKyR)\
 Changlong Wu, **Yifan Wang**, Ananth Grama\
