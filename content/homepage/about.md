@@ -46,33 +46,34 @@ widget:
 ## About Me 
 I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) under the supervision of Prof. Ananth Grama. Prior to that, I completed my undergraduate studies in Electronic Information Engineering with a minor in Artificial intelligence at the [University of Science and Technology of China](http://en.ustc.edu.cn/). 
 
-<!-- [[CV]](https://drive.google.com/file/d/1ZtTGymPAfETK9LGfv4clg6Y19ODMzcCh/view?usp=sharing) -->
+[[CV]](https://drive.google.com/file/d/1ZtTGymPAfETK9LGfv4clg6Y19ODMzcCh/view?usp=sharing)
 
 #### Research interests
 * LLM post-training, particularly on synthetic data generation, reward modeling and self-improvement.
 * LLM training and inference efficiency
+* Trustworthy ML
 
 ## Publication List
-**From Low Rank Gradient Subspace Stabilization to Low-Rank Weights: Observations, Theories, and Applications**\
+[**From Low Rank Gradient Subspace Stabilization to Low-Rank Weights: Observations, Theories, and Applications**](https://arxiv.org/abs/2407.11239)\
 Ajay Jaiswal*, **Yifan Wang\***, Lu Yin, Shiwei Liu, Runjin Chen, Jiawei Zhao, Ananth Grama, Yuandong Tian, Zhangyang Wang\
 International Conference on Machine Learning (ICML), 2025
 
-**More is Less: The Pitfalls of Multi-Model Synthetic Preference Data in DPO Safety Alignment**\
+[**More is Less: The Pitfalls of Multi-Model Synthetic Preference Data in DPO Safety Alignment**](https://arxiv.org/abs/2504.02193)\
 **Yifan Wang**, Runjin Chen, Bolian Li, David Cho, Yihe Deng, Ruqi Zhang, Tianlong Chen, Zhangyang Wang, Ananth Grama, Junyuan Hong\
 Conference on Language Modeling (COLM), 2025
 
-**Cascade reward sampling for efficient decoding-time alignment**\
+[**Cascade reward sampling for efficient decoding-time alignment**](https://arxiv.org/abs/2406.16306)\
 Bolian Li*, **Yifan Wang\***, Ananth Grama, Ruqi Zhang\
 Conference on Language Modeling (COLM), 2025
 
-**Deconvolving Complex Neuronal Networks into Interpretable Task-Specific Connectomes**\
+[**Deconvolving Complex Neuronal Networks into Interpretable Task-Specific Connectomes**](https://arxiv.org/abs/2407.00201)\
 **Yifan Wang**, Vikram Ravindra, Ananth Grama
 
-**A Theory of Fault-Tolerant Learning**\
+[**A Theory of Fault-Tolerant Learning**](https://openreview.net/pdf?id=ooh8tkXKyR)\
 Changlong Wu, **Yifan Wang**, Ananth Grama\
 International Conference on Machine Learning (ICML), 2024 **(Spotlight 3.5%)**
 
-**Learning Functional Distributions with Private Labels**\
+[**Learning Functional Distributions with Private Labels**](https://proceedings.mlr.press/v202/wu23u.html)\
 Changlong Wu, **Yifan Wang**, Ananth Grama, Wojciech Szpankowski\
 International Conference on Machine Learning (ICML), 2023
 
