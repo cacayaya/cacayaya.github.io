@@ -49,7 +49,8 @@ I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) u
 <!-- [[CV]](https://drive.google.com/file/d/1ZtTGymPAfETK9LGfv4clg6Y19ODMzcCh/view?usp=sharing) -->
 
 #### Research interests
-* My research focuses on LLM post-training, particularly on synthetic data generation, reward modeling and self-improvement.
+* LLM post-training, particularly on synthetic data generation, reward modeling and self-improvement.
+* LLM training and inference efficiency
 
 ## Publication List
 **From Low Rank Gradient Subspace Stabilization to Low-Rank Weights: Observations, Theories, and Applications**\
