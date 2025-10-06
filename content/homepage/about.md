@@ -55,10 +55,10 @@ I'm a Fourth year Ph.D. student at [Purdue University](https://www.purdue.edu/) 
 
 ## Publication List
 [**DRIFT: Learning from Abundant User Dissatisfaction in Real-World Preference Learning**](https://arxiv.org/abs/2510.02341)\
-Yifan Wang, Bolian Li, Junlin Wu, Zhaoxuan Tan, Zheli Liu, Ruqi Zhang, Ananth Grama, Qingkai Zeng\
+Yifan Wang, Bolian Li, Junlin Wu, Zhaoxuan Tan, Zheli Liu, Ruqi Zhang, Ananth Grama, Qingkai Zeng
 
 **LLMS Can Get "Brain Rot"!**\
-Shuo Xing, Junyuan Hong, Yifan Wang, Runjin Chen, Zhenyu Zhang, Ananth Grama, Zhengzhong Tu, Zhangyang Wang\
+Shuo Xing, Junyuan Hong, Yifan Wang, Runjin Chen, Zhenyu Zhang, Ananth Grama, Zhengzhong Tu, Zhangyang Wang
 
 [**From Low Rank Gradient Subspace Stabilization to Low-Rank Weights: Observations, Theories, and Applications**](https://arxiv.org/abs/2407.11239)\
 Ajay Jaiswal*, **Yifan Wang\***, Lu Yin, Shiwei Liu, Runjin Chen, Jiawei Zhao, Ananth Grama, Yuandong Tian, Zhangyang Wang\
@@ -73,7 +73,7 @@ Bolian Li*, **Yifan Wang\***, Ananth Grama, Ruqi Zhang\
 Conference on Language Modeling (COLM), 2025
 
 [**Deconvolving Complex Neuronal Networks into Interpretable Task-Specific Connectomes**](https://arxiv.org/abs/2407.00201)\
-**Yifan Wang**, Vikram Ravindra, Ananth Grama
+**Yifan Wang**, Vikram Ravindra, Ananth Grama\
 ACM Conference on Bioinformatics, Computational Biology, and Health Informatics (ACM-BCB), 2025
 
 [**A Theory of Fault-Tolerant Learning**](https://openreview.net/pdf?id=ooh8tkXKyR)\
