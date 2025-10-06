@@ -19,7 +19,7 @@ draft: false
 ## Work Experience
 
 - *2024.5 - 2024.8* &#160;**Texas Instruments**
-  - Machine Learning Research Intern
+  - Large Langugae Model Research Intern
   
 ## Research Experience
 - *2022.9 - present* &#160;**Purdue University**

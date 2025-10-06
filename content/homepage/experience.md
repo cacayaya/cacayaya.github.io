@@ -3,7 +3,7 @@ title: Experience
 draft: false
 section: experiences
 experiences:
-  - title: Machine Learning Research Intern
+  - title: Large Langugae Model Research Intern
     organization:
       name: Texas Instruments
       # url: https://example.org
