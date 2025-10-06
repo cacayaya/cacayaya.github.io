@@ -44,7 +44,7 @@ widget:
 ---
 
 ## About Me 
-I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) under the supervision of Prof. Ananth Grama. Prior to that, I completed my undergraduate studies in Electronic Information Engineering with a minor in Artificial intelligence at the [University of Science and Technology of China](http://en.ustc.edu.cn/). 
+I'm a Fourth year Ph.D. student at [Purdue University](https://www.purdue.edu/) under the supervision of Prof. [Ananth Grama](https://scholar.google.com/citations?user=bpsZlEQAAAAJ&hl=en). I also work with Prof. [Zhangyang Wang](https://scholar.google.com/citations?user=pxFyKAIAAAAJ&hl=en) and Prof. [Junyuan Hong](https://scholar.google.com/citations?user=7Cbv6doAAAAJ&hl=en). Prior to my PhD, I completed my undergraduate studies in Electronic Information Engineering with a minor in Artificial Intelligence at the [University of Science and Technology of China](http://en.ustc.edu.cn/), where I fostered my curiosity and passion for research. 
 <!-- 
 [[CV]](https://drive.google.com/file/d/1ZtTGymPAfETK9LGfv4clg6Y19ODMzcCh/view?usp=sharing) -->
 
@@ -54,6 +54,12 @@ I'm a third year Ph.D. student at [Purdue University](https://www.purdue.edu/) u
 * Trustworthy ML
 
 ## Publication List
+[**DRIFT: Learning from Abundant User Dissatisfaction in Real-World Preference Learning**](https://arxiv.org/abs/2510.02341)\
+Yifan Wang, Bolian Li, Junlin Wu, Zhaoxuan Tan, Zheli Liu, Ruqi Zhang, Ananth Grama, Qingkai Zeng\
+
+**LLMS Can Get "Brain Rot"!**\
+Shuo Xing, Junyuan Hong, Yifan Wang, Runjin Chen, Zhenyu Zhang, Ananth Grama, Zhengzhong Tu, Zhangyang Wang\
+
 [**From Low Rank Gradient Subspace Stabilization to Low-Rank Weights: Observations, Theories, and Applications**](https://arxiv.org/abs/2407.11239)\
 Ajay Jaiswal*, **Yifan Wang\***, Lu Yin, Shiwei Liu, Runjin Chen, Jiawei Zhao, Ananth Grama, Yuandong Tian, Zhangyang Wang\
 International Conference on Machine Learning (ICML), 2025
