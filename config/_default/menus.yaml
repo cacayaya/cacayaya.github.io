@@ -5,6 +5,9 @@ main:
   - name: PROJECTS
     url: /projects/
     weight: 2
+  - name: BLOGS
+    url: /blogs/
+    weight: 3
   - name: CV
     url: /cv/
-    weight: 3
+    weight: 4

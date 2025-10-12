@@ -8,7 +8,7 @@
     <language>en</language>
     <copyright>&amp;copy; 2023 Yifan Wang 
 </copyright>
-    <lastBuildDate>Tue, 15 Apr 2025 14:54:03 -0400</lastBuildDate>
+    <lastBuildDate>Thu, 09 Oct 2025 22:31:13 -0400</lastBuildDate>
     <atom:link href="https://cacayaya.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hello</title>
@@ -16,6 +16,13 @@
       <pubDate>Fri, 01 Sep 2023 16:47:05 -0400</pubDate>
       <guid>https://cacayaya.github.io/docs/hello/</guid>
       <description>Hello!</description>
+    </item>
+    <item>
+      <title>Freedom, Intelligence and Agent</title>
+      <link>https://cacayaya.github.io/blogs/freedom/</link>
+      <pubDate>Thu, 09 Oct 2025 22:31:13 -0400</pubDate>
+      <guid>https://cacayaya.github.io/blogs/freedom/</guid>
+      <description>1. The Role of Human “Freedom” and “Individuality” in the Evolution of Intelligence From Escape from Freedom&#xA;From an evolutionary perspective, the history of humankind can be seen as a process of deepening individuation and freedom. Humanity’s departure from the pre-human stage marked the first step away from the compulsion of instinct, marking the beginning of our quest for freedom.&#xA;If instinct represents a special behavioral pattern determined by our neural structure, we can observe a clear trend across the animal kingdom: the lower an animal’s level of development, the more perfectly it adapts to nature, and the more rigidly its behavior is governed by instinct and reflex.</description>
     </item>
     <item>
       <title>BiteEmo App Development</title>
