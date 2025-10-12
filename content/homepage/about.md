@@ -46,7 +46,7 @@ widget:
 ## About Me 
 I'm a Fourth year Ph.D. student at [Purdue University](https://www.purdue.edu/) under the supervision of Prof. [Ananth Grama](https://scholar.google.com/citations?user=bpsZlEQAAAAJ&hl=en). I also work with Prof. [Zhangyang Wang](https://scholar.google.com/citations?user=pxFyKAIAAAAJ&hl=en) and Prof. [Junyuan Hong](https://scholar.google.com/citations?user=7Cbv6doAAAAJ&hl=en). Prior to my PhD, I completed my undergraduate studies in Electronic Information Engineering with a minor in Artificial Intelligence at the [University of Science and Technology of China](http://en.ustc.edu.cn/), where I fostered my curiosity and passion for research. 
 
-<span style="color:#8B0000; font-weight:semi-bold;">I am actively seeking research intern positions in 2026 summer. Please feel free to reach out if you believe I would be a good fit.
+<span style="color:#8B0000; font-weight:semi-bold;">I’m currently seeking research internship opportunities for Summer 2026 and a full-time role afterward. Don’t hesitate to reach out if you think my background aligns with your team’s work.
 </span>
 <!-- 
 [[CV]](https://drive.google.com/file/d/1ZtTGymPAfETK9LGfv4clg6Y19ODMzcCh/view?usp=sharing) -->
