@@ -1,5 +1,5 @@
 ---
-title: "Brain Rot"
+title: "The Collapsing Mind: How Language Topology Shapes Our Imagination"
 date: 2025-10-28T21:05:36-04:00
 draft: false
 ---
