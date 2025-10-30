@@ -8,7 +8,7 @@
     <language>en</language>
     <copyright>&amp;copy; 2023 Yifan Wang 
 </copyright>
-    <lastBuildDate>Thu, 09 Oct 2025 22:31:13 -0400</lastBuildDate>
+    <lastBuildDate>Tue, 28 Oct 2025 21:05:36 -0400</lastBuildDate>
     <atom:link href="https://cacayaya.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hello</title>
@@ -18,11 +18,18 @@
       <description>Hello!</description>
     </item>
     <item>
+      <title>Brain Rot</title>
+      <link>https://cacayaya.github.io/blogs/brain-rot/</link>
+      <pubDate>Tue, 28 Oct 2025 21:05:36 -0400</pubDate>
+      <guid>https://cacayaya.github.io/blogs/brain-rot/</guid>
+      <description>LLMs Can Get “Brain Rot” Recently, we published a paper examining what happens when large language models consume too much highly popular but low quality content such as viral tweets and short social posts. The results were striking: reasoning ability fell by 23 percent, long-context memory decreased by 30 percent, and simulated personality tests showed spikes in narcissism and psychopathy. Even after retraining on clean, high-quality data, the model struggled to fully recover.&#xA;We call this phenomenon “LLM Brain Rot”, as it closely resembles what can happen to the human mind when it is continuously exposed to shallow, repetitive, and emotionally charged information.</description>
+    </item>
+    <item>
       <title>Freedom, Intelligence and Agent</title>
       <link>https://cacayaya.github.io/blogs/freedom/</link>
       <pubDate>Thu, 09 Oct 2025 22:31:13 -0400</pubDate>
       <guid>https://cacayaya.github.io/blogs/freedom/</guid>
-      <description>1. The Role of Human “Freedom” and “Individuality” in the Evolution of Intelligence From Escape from Freedom&#xA;From an evolutionary perspective, the history of humankind can be seen as a process of deepening individuation and freedom. Humanity’s departure from the pre-human stage marked the first step away from the compulsion of instinct, marking the beginning of our quest for freedom.&#xA;If instinct represents a special behavioral pattern determined by our neural structure, we can observe a clear trend across the animal kingdom: the lower an animal’s level of development, the more perfectly it adapts to nature, and the more rigidly its behavior is governed by instinct and reflex.</description>
+      <description>The Role of Human “Freedom” and “Individuality” in the Evolution of Intelligence From Escape from Freedom&#xA;From an evolutionary perspective, the history of humankind can be seen as a process of deepening individuation and freedom. Humanity’s departure from the pre-human stage marked the first step away from the compulsion of instinct, marking the beginning of our quest for freedom.&#xA;If instinct represents a special behavioral pattern determined by our neural structure, we can observe a clear trend across the animal kingdom: the lower an animal’s level of development, the more perfectly it adapts to nature, and the more rigidly its behavior is governed by instinct and reflex.</description>
     </item>
     <item>
       <title>BiteEmo App Development</title>

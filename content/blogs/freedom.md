@@ -39,7 +39,7 @@ LLM得结束它的学校生活in the future，脱离考试（benchmark）和expl
 2.关于如何把experience里学到的东西map回去，我们都知道LLM的weight里存储了它之前training里所学的knowledge，但是在与真实世界交互中获得的新的知识，或者新的思路，如何优雅的mapping回到model自身，从而不断evolve和进步，在这一方面有很多工作不断增加memory to external data-base或者$\Delta W$直接去增添或者更新模型参数，但似乎还远没有找到最优的方案
  -->
 
-### 1. The Role of Human “Freedom” and “Individuality” in the Evolution of Intelligence
+### The Role of Human “Freedom” and “Individuality” in the Evolution of Intelligence
 
 > From *Escape from Freedom*
 
@@ -57,9 +57,7 @@ A curious fact here is that **consciousness itself is a form of finitude**. If w
 
 When our individuality grows beyond anything found in the natural world, we begin to suffer a kind of spiritual pressure because freedom has a cost. It is an evolutionary gift that our biological systems have not yet learned to bear. To put it bluntly, anxiety is freedom and freedom is anxiety.
 
----
-
-### 2. AGI, Intelligence, and Consciousness
+### AGI, Intelligence, and Consciousness
 
 From the perspective of **intelligence**, I believe humanity’s evolutionary path was correct because freedom, or individuality, served as a key catalyst.
 
@@ -80,9 +78,7 @@ From the perspective of **consciousness**, I do not believe LLMs possess it beca
 
 However, when we examine the relationship between *consciousness* and *intelligence*, we find they are not tightly correlated. Intelligence can exist without consciousness, but without consciousness, intelligence struggles to produce **self-motivation**. It can reason, but it cannot *care*, and without caring, it is difficult to self-evolve.
 
----
-
-### 3. On Self-Evolving Agents
+### On Self-Evolving Agents
 
 How, then, can a non-conscious LLM become a *self-evolving agent*? This question has fascinated me lately.
 
