@@ -18,8 +18,8 @@ draft: false
 
 ## Work Experience
 
-- *2024.5 - 2024.8* &#160;**Texas Instruments**
-  - Large Langugae Model Research Intern
+- *2024.5 - 2024.12* &#160;**Texas Instruments**
+  - Large Langugae Model Research Intern, work with Dr. Fanping Sui.
   
 ## Research Experience
 - *2022.9 - present* &#160;**Purdue University**
