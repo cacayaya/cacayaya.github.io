@@ -52,7 +52,7 @@ I’m a PhD candidate at [Purdue University](https://www.purdue.edu/) under the 
 [[CV]](https://drive.google.com/file/d/1ZtTGymPAfETK9LGfv4clg6Y19ODMzcCh/view?usp=sharing) -->
 
 #### Research interests
-* LLM post-training, particularly on synthetic data generation, reward modeling and self-improvement.
+* LLM post-training, particularly synthetic data generation, mechanism understanding and model self-improvement.
 * LLM training and inference efficiency
 * Trustworthy ML
 
