@@ -1,7 +1,7 @@
 ---
 title: Yifan Wang
 draft: false
-role: Ph.D Student
+role: Ph.D Candidate
 avatar: icon.png
 bio: 
 organization:
