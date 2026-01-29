@@ -1,0 +1,4 @@
+{{/* Custom head: include site-specific stylesheet */}}
+{{ $custom := resources.Get "css/custom.css" | minify | fingerprint "sha384" }}
+<link rel="stylesheet" href="{{ $custom.Permalink }}" integrity="{{ $custom.Data.Integrity }}">
+

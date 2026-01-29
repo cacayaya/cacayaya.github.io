@@ -5,18 +5,24 @@ role: Ph.D Candidate
 avatar: icon.png
 bio: 
 organization:
-  name: Google Scholar
-  url: https://scholar.google.com/citations?user=hqL5jWYAAAAJ&hl=en
+  name: Purdue University
 social:
   - icon: envelope
     iconPack: fas
     url: mailto:wang5617@purdue.edu
+  - icon: graduation-cap
+    iconPack: fas
+    url: https://scholar.google.com/citations?user=hqL5jWYAAAAJ&hl=en
   - icon: twitter
     iconPack: fab
     url: https://twitter.com/YifanWang_Amber
   - icon: github
     iconPack: fab
     url: https://github.com/cacayaya
+  - icon: linkedin
+    iconPack: fab
+    url: https://www.linkedin.com/in/yifan-wang-66521524b/
+
 
 weight: 1
 widget:
@@ -57,6 +63,7 @@ I’m a PhD candidate at [Purdue University](https://www.purdue.edu/) under the 
 * Trustworthy ML
 
 ## NEWS
+* Jan, 2026. One Paper accepted to **ICLR 2026**
 * Nov, 2025. Our recent paper, [**LLMs Can Get “Brain Rot”!**](https://arxiv.org/abs/2510.13928), has received **widespread international media coverage**, including features in [**Nature**](https://www.nature.com/articles/d41586-025-03542-2), [**Wired**](https://www.wired.com/story/ai-models-social-media-cognitive-decline-study/), [**Forbes**](https://www.forbes.com/sites/lesliekatz/2025/10/23/junky-online-content-gives-ai-models-brain-rot-too/), [**Fortune**](https://fortune.com/2025/10/22/ai-brain-rot-junk-social-media-viral-addicting-content-tech/), [**The Chosun Daily (조선일보)**](https://www.chosun.com/economy/science/2025/11/02/OZVD6UOUFFCQDOTPETUN47R6FI/), [**India Today**](https://www.indiatoday.in/technology/news/story/ai-gets-brain-rot-too-study-finds-feeding-chatbots-junk-posts-makes-them-dumb-and-mean-2806199-2025-10-21), [**Synced (机器之心)**](https://mp.weixin.qq.com/s/7UDudFAivb80jx15tuf6UA), and others.
 * Aug, 2025. One paper accepted to **ACM-BCB 2025**.
 * July, 2025. Two papers accepted to **COLM 2025**.
@@ -68,6 +75,7 @@ I’m a PhD candidate at [Purdue University](https://www.purdue.edu/) under the 
 ## Publication List
 [**DRIFT: Learning from Abundant User Dissatisfaction in Real-World Preference Learning**](https://arxiv.org/abs/2510.02341)\
 **Yifan Wang**, Bolian Li, Junlin Wu, Zhaoxuan Tan, Zheli Liu, Ruqi Zhang, Ananth Grama, Qingkai Zeng
+International Conference on Learning Representations (ICLR), 2026
 
 [**LLMs Can Get "Brain Rot"!**](https://arxiv.org/abs/2510.13928)\
 Shuo Xing*, Junyuan Hong*, **Yifan Wang**, Runjin Chen, Zhenyu Zhang, Ananth Grama, Zhengzhong Tu, Zhangyang Wang

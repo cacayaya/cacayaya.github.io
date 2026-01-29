@@ -10,12 +10,9 @@
     <div class="w-3/12 border-b xl:w-2/12"></div>
 
     <div class="flex items-center pt-4">
-      {{ with or (.Params.role) (.Params.organizations) }}
-        <i class="fas fa-user"></i>
-      {{ end }}
       <div class="flex flex-wrap">
         {{ with .Params.role }}
-          <span class="ps-4">{{ . | markdownify }}</span>
+          <span class="ps-0">{{ . | markdownify }}</span>
         {{ end }}
 
         {{ with .Params.organization }}
@@ -24,24 +21,27 @@
       </div>
     </div>
 
+    {{ $brand := $.Param "social" }}
+    {{ if $brand }}
+      <div class="mt-4 flex flex-wrap items-center gap-4">
+        {{ range $brand }}
+          {{/* Deprecation warning(v1.0.0) starts */}}
+          {{ if .icon_pack }}
+            {{ warnf "Param 'icon_pack' in %q is deprecated and will be removed in Eureka v1.0.0. Please use 'iconPack' instead." $.File.Path }}
+          {{ end }}
+          {{ $iconPack := .iconPack | default .icon_pack }}
+          {{/* Deprecation warning(v1.0.0) ends */}}
+          {{ $src := print $iconPack " fa-" .icon }}
+          <a href="{{ .url }}" class="text-xl">
+            <i class="{{ print $src }}"></i>
+          </a>
+        {{ end }}
+      </div>
+    {{ end }}
+
     {{ with .Params.bio }}
       <div class="py-8 text-lg leading-normal">
         {{ . | markdownify }}
-      </div>
-    {{ end }}
-  </div>
-  <div class="md:ms-8 flex items-end justify-center md:flex-col">
-    {{ $brand := $.Param "social" }}
-    {{ range $brand }}
-      {{/* Deprecation warning(v1.0.0) starts */}}
-      {{ if .icon_pack }}
-        {{ warnf "Param 'icon_pack' in %q is deprecated and will be removed in Eureka v1.0.0. Please use 'iconPack' instead." $.File.Path }}
-      {{ end }}
-      {{ $iconPack := .iconPack | default .icon_pack }}
-      {{/* Deprecation warning(v1.0.0) ends */}}
-      {{ $src := print $iconPack " fa-" .icon }}
-      <div class="mx-2 mb-2 mt-4 md:mx-0 md:mt-2">
-        <a href="{{ .url }}"><i class="{{ print $src }}"></i></a>
       </div>
     {{ end }}
   </div>
