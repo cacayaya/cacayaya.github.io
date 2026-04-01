@@ -73,8 +73,11 @@ I’m a PhD candidate at [Purdue University](https://www.purdue.edu/) under the 
 * Apr, 2023. One paper accepted to **ICML 2023**.
 
 ## Publication List
+[**SARL: Label-Free Reinforcement Learning by Rewarding Reasoning Topology**](https://arxiv.org/abs/2603.27977)\
+**Yifan Wang**, Bolian Li, David Cho, Ruqi Zhang, Fanping Sui, Ananth Grama\
+
 [**DRIFT: Learning from Abundant User Dissatisfaction in Real-World Preference Learning**](https://arxiv.org/abs/2510.02341)\
-**Yifan Wang**, Bolian Li, Junlin Wu, Zhaoxuan Tan, Zheli Liu, Ruqi Zhang, Ananth Grama, Qingkai Zeng
+**Yifan Wang**, Bolian Li, Junlin Wu, Zhaoxuan Tan, Zheli Liu, Ruqi Zhang, Ananth Grama, Qingkai Zeng\
 International Conference on Learning Representations (ICLR), 2026
 
 [**LLMs Can Get "Brain Rot"!**](https://arxiv.org/abs/2510.13928)\
