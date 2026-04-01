@@ -76,12 +76,12 @@ I’m a PhD candidate at [Purdue University](https://www.purdue.edu/) under the 
 [**SARL: Label-Free Reinforcement Learning by Rewarding Reasoning Topology**](https://arxiv.org/abs/2603.27977)\
 **Yifan Wang**, Bolian Li, David Cho, Ruqi Zhang, Fanping Sui, Ananth Grama
 
+[**LLMs Can Get "Brain Rot"!**](https://arxiv.org/abs/2510.13928)\
+Shuo Xing*, Junyuan Hong*, **Yifan Wang**, Runjin Chen, Zhenyu Zhang, Ananth Grama, Zhengzhong Tu, Zhangyang Wang
+
 [**DRIFT: Learning from Abundant User Dissatisfaction in Real-World Preference Learning**](https://arxiv.org/abs/2510.02341)\
 **Yifan Wang**, Bolian Li, Junlin Wu, Zhaoxuan Tan, Zheli Liu, Ruqi Zhang, Ananth Grama, Qingkai Zeng\
 International Conference on Learning Representations (ICLR), 2026
-
-[**LLMs Can Get "Brain Rot"!**](https://arxiv.org/abs/2510.13928)\
-Shuo Xing*, Junyuan Hong*, **Yifan Wang**, Runjin Chen, Zhenyu Zhang, Ananth Grama, Zhengzhong Tu, Zhangyang Wang
 
 [**From Low Rank Gradient Subspace Stabilization to Low-Rank Weights: Observations, Theories, and Applications**](https://arxiv.org/abs/2407.11239)\
 Ajay Jaiswal*, **Yifan Wang\***, Lu Yin, Shiwei Liu, Runjin Chen, Jiawei Zhao, Ananth Grama, Yuandong Tian, Zhangyang Wang\
