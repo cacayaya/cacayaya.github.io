@@ -57,10 +57,15 @@ I’m a PhD candidate at [Purdue University](https://www.purdue.edu/) under the 
 <!-- 
 [[CV]](https://drive.google.com/file/d/1ZtTGymPAfETK9LGfv4clg6Y19ODMzcCh/view?usp=sharing) -->
 
+
 #### Research interests
 * LLM post-training, particularly synthetic data generation, mechanism understanding and model self-improvement.
-* LLM training and inference efficiency
-* Trustworthy ML
+* Self-evolving agent.
+* LLM training and inference efficiency.
+
+
+<a href="/room/" class="other-sides-link">Other Sides Of Me</a>
+
 
 ## NEWS
 * Jan, 2026. One Paper accepted to **ICLR 2026**
@@ -106,4 +111,3 @@ International Conference on Machine Learning (ICML), 2024 **(Spotlight 3.5%)**
 [**Learning Functional Distributions with Private Labels**](https://proceedings.mlr.press/v202/wu23u.html)\
 Changlong Wu, **Yifan Wang**, Ananth Grama, Wojciech Szpankowski\
 International Conference on Machine Learning (ICML), 2023
-

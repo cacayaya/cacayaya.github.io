@@ -1,0 +1,2 @@
+static/room/model-assets.js filter=lfs diff=lfs merge=lfs -text
+docs/room/model-assets.js filter=lfs diff=lfs merge=lfs -text

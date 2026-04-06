@@ -1,0 +1,2736 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>— room —</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #060810; overflow: hidden;
+      font-family: 'SF Mono', 'Fira Code', 'Courier New', monospace;
+      color: #fff; cursor: default;
+    }
+    #canvas { display: block; position: fixed; top: 0; left: 0; }
+
+    /* Intro */
+    #intro {
+      position: fixed; inset: 0; background: linear-gradient(180deg, #060810 0%, #0a0e1a 100%);
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 16px; z-index: 999; transition: opacity 1.2s;
+    }
+    #intro.fade { opacity: 0; pointer-events: none; }
+    #intro h1 { font-size: 15px; letter-spacing: 6px; color: rgba(255,255,255,0.96); font-weight: 300; }
+    #intro p  { font-size: 13px; letter-spacing: 3px; color: rgba(255,255,255,0.86); animation: none; }
+    #intro-status { font-size: 14px; color: rgba(255,255,255,0.96); }
+    #intro-enter-hint { font-size: 14px; color: rgba(255,255,255,0.9); }
+    #intro-progress {
+      width: min(360px, 72vw);
+      height: 8px;
+      border: 1px solid rgba(220,190,130,0.28);
+      background: rgba(10, 14, 26, 0.72);
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: inset 0 0 16px rgba(0,0,0,0.5);
+    }
+    #intro-progress-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, rgba(235,196,124,0.85), rgba(255,224,158,0.95));
+      transition: width 0.2s ease;
+      box-shadow: 0 0 16px rgba(230,180,90,0.35);
+    }
+    #intro-enter-hint.ready { color: #ffffff; animation: enterBlink 1.1s ease-in-out infinite; }
+    @keyframes enterBlink { 0%,100%{opacity:0.35;} 50%{opacity:1;} }
+    @keyframes pulse { 0%,100%{opacity:0.3;} 50%{opacity:0.8;} }
+
+    /* Hint / label / back */
+    #hint { position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%); font-size: 11px; letter-spacing: 4px; color: rgba(255,255,255,0.35); pointer-events: none; transition: opacity 0.6s; text-transform: uppercase; }
+    #hint.hidden { opacity: 0; }
+    #hover-label { position: fixed; bottom: 68px; left: 50%; transform: translateX(-50%); font-size: 12px; letter-spacing: 3px; color: rgba(255,255,255,0.8); background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.15); padding: 6px 18px; pointer-events: none; opacity: 0; transition: opacity 0.25s; text-transform: uppercase; }
+    #hover-label.visible { opacity: 1; }
+    #back-btn { position: fixed; top: 24px; left: 24px; background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.2); padding: 8px 22px; font-family: inherit; font-size: 11px; letter-spacing: 3px; cursor: pointer; display: none; z-index: 300; transition: all 0.25s; text-transform: uppercase; }
+    #back-btn:hover { color: #fff; border-color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.06); }
+
+    /* ─── OVERLAYS ─── */
+    .overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 200; pointer-events: none; opacity: 0; transition: opacity 0.5s; }
+    .overlay.visible { pointer-events: all; opacity: 1; }
+
+    /* ═══ macOS COMPUTER OVERLAY ═══ */
+    #computer-overlay { background: rgba(0,0,0,0.88); }
+    /* Monitor bezel */
+    #monitor-bezel {
+      background: linear-gradient(160deg, #2e2e2e 0%, #1c1c1c 50%, #161616 100%);
+      border-radius: 14px;
+      padding: 12px 12px 28px;
+      width: min(94vw, 1140px);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.07),
+        0 0 0 1px rgba(0,0,0,0.5),
+        0 50px 140px rgba(0,0,0,0.95),
+        0 0 100px rgba(30,80,220,0.18);
+    }
+    #macos-screen {
+      background: #0a1428; border-radius: 6px;
+      height: 76vh; overflow: hidden; position: relative;
+      display: flex; flex-direction: column;
+    }
+    #monitor-chin {
+      display: flex; align-items: center; justify-content: center; height: 28px;
+    }
+    .chin-logo { color: rgba(255,255,255,0.22); font-size: 13px; }
+
+    /* macOS menu bar */
+    #macos-menubar {
+      background: rgba(18,20,28,0.96);
+      height: 21px; display: flex; align-items: center;
+      padding: 0 12px; justify-content: space-between;
+      flex-shrink: 0; font-size: 11px; z-index: 100; position: relative;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .mb-l { display: flex; align-items: center; gap: 16px; }
+    .mb-r { display: flex; align-items: center; gap: 14px; color: rgba(255,255,255,0.65); font-size: 11px; }
+    .mb-apple { font-size: 15px; color: rgba(255,255,255,0.9); }
+    .mb-appname { font-weight: 600; color: #fff; }
+    .mb-item { color: rgba(255,255,255,0.8); }
+
+    /* macOS desktop */
+    #macos-desktop {
+      flex: 1; position: relative; overflow: hidden;
+      background:
+        radial-gradient(ellipse at 25% 65%, rgba(40,20,90,0.55) 0%, transparent 50%),
+        radial-gradient(ellipse at 78% 20%, rgba(15,45,100,0.45) 0%, transparent 50%),
+        linear-gradient(145deg, #060a14 0%, #0b1020 50%, #080c1a 100%);
+    }
+
+    /* App windows */
+    .mac-window {
+      position: absolute; border-radius: 10px; overflow: hidden;
+      display: flex; flex-direction: column;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.7), 0 0 0 0.5px rgba(255,255,255,0.1);
+      transition: opacity 0.2s;
+    }
+    /* Apps should be true fullscreen inside the monitor content area (no edge gaps). */
+    .mac-window { border-radius: 0; box-shadow: none; }
+    #mac-vscode { inset: 0; background: #1e1e1e; display: none; }
+    #mac-chrome { inset: 0; background: #202124; display: flex; }
+    #mac-finder { inset: 0; background: #1d1d1f; display: none; }
+    #mac-outlook { inset: 0; background: #121b2f; display: none; }
+
+    /* Generic mac titlebar */
+    .mac-titlebar {
+      background: #323233; height: 31px;
+      display: flex; align-items: center; padding: 0 12px;
+      flex-shrink: 0; position: relative; user-select: none;
+    }
+    .mac-tl { display: flex; align-items: center; gap: 7px; z-index: 1; }
+    .tlb { width: 12px; height: 12px; border-radius: 50%; cursor: pointer; transition: filter 0.15s; }
+    .tlb:hover { filter: brightness(0.75); }
+    .tlb-r { background: #ff5f57; }
+    .tlb-y { background: #febc2e; }
+    .tlb-g { background: #28c840; }
+    .mac-wintitle { position: absolute; left: 0; right: 0; text-align: center; font-size: 12px; color: rgba(255,255,255,0.5); pointer-events: none; }
+
+    /* VSCode layout (inside mac window) */
+    .vscode-body { flex: 1; display: flex; flex-direction: row; overflow: hidden; }
+    .vs-sidebar { width: 190px; background: #252526; border-right: 1px solid #3c3c3c; flex-shrink: 0; overflow-y: auto; padding: 4px 0; }
+    .vs-section { padding: 12px 10px 4px; font-size: 10px; color: rgba(255,255,255,0.35); letter-spacing: 1.5px; }
+    .vs-file { padding: 3px 10px 3px 20px; font-size: 12px; color: rgba(255,255,255,0.55); cursor: default; display: flex; align-items: center; gap: 6px; }
+    .vs-file:hover { background: rgba(255,255,255,0.05); }
+    .vs-file.active { background: rgba(255,255,255,0.08); color: #fff; }
+    .vs-main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .vs-editor-tabs { background: #252526; display: flex; border-bottom: 1px solid #3c3c3c; flex-shrink: 0; }
+    .vs-editor-tab { padding: 6px 16px; font-size: 12px; color: rgba(255,255,255,0.45); border-right: 1px solid #3c3c3c; }
+    .vs-editor-tab.active { background: #1e1e1e; color: #fff; }
+    .vs-code-area { flex: 1; overflow-y: auto; padding: 8px 0; font-size: 12.5px; line-height: 1.65; }
+    .cl { display: flex; }
+    .ln { width: 44px; text-align: right; padding-right: 16px; color: rgba(255,255,255,0.2); font-size: 11px; flex-shrink: 0; user-select: none; }
+    .ct { flex: 1; white-space: pre; }
+    .kw  { color: #569cd6; } .fn  { color: #dcdcaa; } .cls { color: #4ec9b0; }
+    .str { color: #ce9178; } .num { color: #b5cea8; } .cmt { color: #6a9955; }
+    .var { color: #9cdcfe; } .op  { color: #d4d4d4; }
+    .vs-terminal { height: 130px; background: #0d0d0d; border-top: 1px solid #3c3c3c; padding: 8px 14px; font-size: 12px; overflow-y: auto; flex-shrink: 0; }
+    .tl  { margin-bottom: 2px; color: #ccc; }
+    .tl .tp { color: #0dbc79; } .tl .tm { color: #4fc3f7; }
+    .tl .tr { color: #ef9a9a; } .tl .ta { color: #a5d6a7; }
+    .blink { display: inline-block; animation: blink 1s infinite; }
+    @keyframes blink { 0%,49%{opacity:1;} 50%,100%{opacity:0;} }
+
+    /* Chrome window */
+    .chrome-winbar {
+      background: #35363a; height: 35px;
+      display: flex; align-items: center; padding: 0 8px 0 10px;
+      flex-shrink: 0; gap: 8px;
+    }
+    .chrome-tabs-strip { display: flex; align-items: center; flex: 1; }
+    .chrome-winbar .mac-tl { transform: translateY(-1px); }
+    .chrome-tab-item {
+      background: #202124; border-radius: 8px 8px 0 0;
+      padding: 5px 14px 5px 10px; font-size: 12px;
+      color: rgba(255,255,255,0.85);
+      display: flex; align-items: center; gap: 8px;
+      min-width: 180px; max-width: 260px;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-bottom: none;
+    }
+    .chrome-tab-item.inactive {
+      background: #2a2b30;
+      color: rgba(255,255,255,0.6);
+      opacity: 0.92;
+    }
+    .chrome-favicon { width: 16px; height: 16px; background: #e50914; border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 800; color: white; flex-shrink: 0; font-family: sans-serif; }
+    .chrome-tab-title { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .chrome-addrbar {
+      background: #292a2d; padding: 5px 12px;
+      display: flex; align-items: center; gap: 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;
+    }
+    .cnav { background: transparent; border: none; color: rgba(255,255,255,0.4); font-size: 15px; cursor: pointer; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+    .cnav:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+    .chrome-url {
+      background: #3c3d41; border-radius: 20px; padding: 5px 16px;
+      font-size: 12px; color: rgba(255,255,255,0.65); flex: 1;
+      font-family: sans-serif; display: flex; align-items: center; gap: 8px;
+    }
+    .chrome-url-lock { color: rgba(255,255,255,0.35); font-size: 11px; }
+    /* Netflix / browser content */
+    .chrome-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #141414; }
+    .chrome-home {
+      background: #f0f1f4;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      padding: 0;
+    }
+    .chrome-bookmarks {
+      height: 34px;
+      background: #2f3138;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 10px;
+      flex-shrink: 0;
+    }
+    .chrome-shortcut-btn {
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.85);
+      border-radius: 6px;
+      font-size: 11px;
+      padding: 4px 10px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .chrome-shortcut-btn:hover { background: rgba(255,255,255,0.14); }
+    .chrome-home-frame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      background: #fff;
+      flex: 1;
+      min-height: 0;
+    }
+    .chrome-page { display: none; flex: 1; min-height: 0; }
+    .chrome-page.active { display: flex; flex-direction: column; }
+    .chrome-empty {
+      background: #2f3138;
+      color: rgba(255,255,255,0.7);
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* Finder */
+    .finder-topbar {
+      height: 30px;
+      background: linear-gradient(180deg, #2f3034, #242529);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 12px;
+      color: rgba(255,255,255,0.7);
+      font-size: 12px;
+      letter-spacing: 0.3px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .finder-body { flex: 1; display: flex; min-height: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .finder-sidebar {
+      width: 220px;
+      background: #26272b;
+      border-right: 1px solid rgba(255,255,255,0.06);
+      padding: 14px 10px;
+      color: rgba(255,255,255,0.85);
+      overflow-y: auto;
+    }
+    .finder-sec { font-size: 11px; letter-spacing: 0.8px; color: rgba(255,255,255,0.42); margin: 14px 8px 8px; text-transform: uppercase; }
+    .finder-item {
+      padding: 8px 10px;
+      border-radius: 7px;
+      font-size: 13px;
+      color: rgba(255,255,255,0.78);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .finder-item.active { background: rgba(70,130,255,0.28); color: #fff; }
+    .finder-main { flex: 1; background: #1b1c20; padding: 20px; overflow-y: auto; color: rgba(255,255,255,0.88); }
+    .finder-path { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 16px; }
+    .finder-grid { display: grid; grid-template-columns: repeat(4, minmax(110px, 1fr)); gap: 14px; }
+    .finder-file {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .finder-file-icon { font-size: 28px; margin-bottom: 8px; }
+
+    /* Outlook (closer to real Outlook desktop layout) */
+    .outlook-shell {
+      flex: 1;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: 38px 38px 1fr;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #eef1f5;
+      color: #1f1f1f;
+    }
+    .outlook-topbar {
+      background: #0f6cbd;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      font-size: 12px;
+    }
+    .outlook-top-left { display: flex; align-items: center; gap: 12px; }
+    .outlook-search {
+      width: 300px;
+      height: 26px;
+      border-radius: 6px;
+      border: 1px solid rgba(0,0,0,0.15);
+      background: rgba(255,255,255,0.94);
+      color: #222;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      font-size: 12px;
+    }
+    .outlook-toolbar {
+      background: #f7f7f7;
+      border-bottom: 1px solid #d8d8d8;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+      color: #3a3a3a;
+      font-size: 11px;
+    }
+    .outlook-toolbar .active { color: #0f6cbd; font-weight: 600; border-bottom: 2px solid #0f6cbd; padding-bottom: 2px; }
+    .outlook-main {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 40px 184px 232px minmax(0, 1fr);
+      background: #eef1f5;
+    }
+    .outlook-rail {
+      background: #f4f4f4;
+      border-right: 1px solid #d7d7d7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 8px;
+      gap: 10px;
+      color: #0f6cbd;
+      font-size: 18px;
+    }
+    .outlook-folders {
+      background: #f3f3f3;
+      border-right: 1px solid #d7d7d7;
+      padding: 14px 10px;
+      overflow-y: auto;
+    }
+    .outlook-acct { font-size: 12px; color: #2a2a2a; margin-bottom: 8px; font-weight: 600; }
+    .outlook-folder {
+      font-size: 11px;
+      color: #2f2f2f;
+      padding: 7px 8px;
+      border-radius: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .outlook-folder.active { background: #d9e8f8; border-left: 3px solid #0f6cbd; }
+    .outlook-list {
+      background: #ffffff;
+      border-right: 1px solid #d7d7d7;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+    .outlook-list-head {
+      padding: 10px 12px;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: 14px;
+      font-weight: 600;
+      color: #2a2a2a;
+      line-height: 1;
+    }
+    .mail-item {
+      margin: 8px;
+      border: 2px solid #0f6cbd;
+      background: #dbeeff;
+      border-radius: 4px;
+      padding: 12px 14px;
+      min-height: 96px;
+    }
+    .mail-item-from { font-size: 11px; color: #2e2e2e; font-weight: 600; margin-bottom: 3px; }
+    .mail-item-subj { font-size: 11px; color: #005a9e; margin-bottom: 3px; font-weight: 600; line-height: 1.25; }
+    .mail-item-preview { font-size: 10px; color: #505050; line-height: 1.35; }
+    .outlook-read {
+      background: #fafafa;
+      padding: 12px 16px;
+      overflow-y: auto;
+    }
+    .compose-toolbar {
+      border: 1px solid #dadada;
+      border-radius: 8px 8px 0 0;
+      border-bottom: none;
+      background: #fff;
+      padding: 6px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: #4b5563;
+    }
+    .compose-send {
+      background: #0f6cbd;
+      color: #fff;
+      border-radius: 6px;
+      padding: 5px 12px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .compose-pane {
+      border: 1px solid #dadada;
+      background: #fff;
+      border-radius: 0 0 8px 8px;
+      min-height: 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .compose-line {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      align-items: center;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 0 12px;
+      min-height: 46px;
+      min-height: 40px;
+      font-size: 12px;
+      color: #374151;
+    }
+    .compose-line .label { color: #6b7280; }
+    .compose-line .value { color: #111827; }
+    .compose-subject {
+      border-bottom: 1px solid #e5e7eb;
+      padding: 10px 12px;
+      font-size: 22px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+    .compose-editor {
+      padding: 12px 12px 90px;
+      font-size: 14px;
+      line-height: 1.55;
+      color: #1f2937;
+      flex: 1;
+      overflow-y: auto;
+    }
+    .compose-editor a { color: #0f6cbd; text-decoration: none; border-bottom: 1px solid rgba(15,108,189,0.4); }
+    .compose-editor a:hover { color: #09528f; border-bottom-color: rgba(9,82,143,0.65); }
+    .nf-header { padding: 14px 36px; display: flex; align-items: center; gap: 36px; background: linear-gradient(180deg, rgba(0,0,0,0.9),transparent); flex-shrink: 0; }
+    .nf-logo { color: #e50914; font-size: 24px; font-weight: 900; font-family: 'Arial Black', sans-serif; letter-spacing: -1px; }
+    .nf-nav { display: flex; gap: 18px; }
+    .nf-nav span { color: rgba(255,255,255,0.65); font-size: 13px; font-family: sans-serif; cursor: default; }
+    .nf-hero { flex: 1; background: linear-gradient(105deg,#0a0a0f 0%,#120408 60%,#1a0505 100%); position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 40px 48px; }
+    .nf-hero-bg { position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 40%, rgba(120,20,20,0.25) 0%, transparent 60%); }
+    .nf-badge { font-size: 11px; letter-spacing: 3px; color: rgba(255,255,255,0.4); margin-bottom: 10px; font-family: sans-serif; }
+    .nf-title { font-size: 42px; font-weight: 800; font-family: 'Georgia', serif; line-height: 1.1; margin-bottom: 12px; color: #fff; text-shadow: 2px 2px 20px rgba(0,0,0,0.8); }
+    .nf-title em { font-style: italic; color: #e8c97a; }
+    .nf-meta { font-size: 13px; color: rgba(255,255,255,0.5); font-family: sans-serif; margin-bottom: 18px; line-height: 1.6; }
+    .nf-btns { display: flex; gap: 12px; }
+    .nf-btn  { background: #fff; color: #000; border: none; padding: 10px 24px; font-size: 15px; font-weight: 700; cursor: pointer; border-radius: 4px; font-family: sans-serif; }
+    .nf-btn2 { background: rgba(109,109,110,0.7); color: #fff; border: none; padding: 10px 22px; font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 4px; font-family: sans-serif; }
+    .nf-stars { margin-top: 16px; font-size: 20px; letter-spacing: 2px; }
+    .nf-more-lbl { position: absolute; top: 24px; right: 48px; font-size: 11px; color: rgba(255,255,255,0.3); letter-spacing: 2px; font-family: sans-serif; }
+    .nf-herotext { position: relative; z-index: 1; max-width: 460px; }
+
+    /* macOS Dock */
+    #macos-dock {
+      position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); z-index: 50;
+    }
+    .dock-bg {
+      background: rgba(255,255,255,0.09);
+      backdrop-filter: blur(28px); -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(255,255,255,0.16);
+      border-radius: 20px; padding: 6px 14px;
+      display: flex; align-items: flex-end; gap: 5px;
+    }
+    .dock-sep { width: 1px; background: rgba(255,255,255,0.18); height: 36px; margin: 0 5px; align-self: center; }
+    .di {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      cursor: pointer; transition: transform 0.18s ease; position: relative;
+    }
+    .di:hover { transform: translateY(-12px) scale(1.2); }
+    .di:hover .dock-tooltip { opacity: 1; }
+    .dock-ib {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; overflow: hidden;
+    }
+    .di-finder  .dock-ib { background: transparent; border: none; }
+    .di-vscode  .dock-ib { background: transparent; }
+    .di-outlook .dock-ib { background: transparent; border: none; }
+    .di-chrome  .dock-ib { background: transparent; }
+    .dock-app-icon {
+      width: 42px;
+      height: 42px;
+      object-fit: contain;
+      object-position: center;
+      border-radius: 10px;
+      display: block;
+      background: #fff;
+      padding: 4px;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.35);
+    }
+    .dock-app-icon.finder {
+      width: 42px;
+      height: 42px;
+      object-fit: cover;
+      background: transparent;
+      padding: 0;
+      border: none;
+      box-shadow: none;
+    }
+    .chrome-ring { width: 38px; height: 38px; border-radius: 50%; background: conic-gradient(#ea4335 0deg 90deg,#fbbc04 90deg 180deg,#34a853 180deg 270deg,#4285f4 270deg 360deg); display: flex; align-items: center; justify-content: center; }
+    .chrome-inner { width: 16px; height: 16px; background: #4285f4; border-radius: 50%; border: 4px solid #fff; }
+    .dock-dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.75); display: none; }
+    .dock-dot.on { display: block; }
+    .dock-tooltip { position: absolute; bottom: calc(100% + 14px); left: 50%; transform: translateX(-50%); background: rgba(10,10,20,0.85); color: rgba(255,255,255,0.9); font-size: 11px; padding: 4px 10px; border-radius: 5px; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity 0.15s; }
+
+    /* ─── BOARD GAMES OVERLAY ─── */
+    #bg-ui { width: min(88vw, 880px); background: #130f08; border-radius: 12px; padding: 40px 44px; box-shadow: 0 0 80px rgba(200,150,50,0.15), 0 30px 80px rgba(0,0,0,0.8); max-height: 85vh; overflow-y: auto; }
+    .sec-title { font-size: 11px; letter-spacing: 5px; color: rgba(220,175,80,0.7); margin-bottom: 28px; text-transform: uppercase; }
+    .games-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .game-card { background: #1c1508; border: 1px solid rgba(200,150,50,0.15); border-radius: 8px; padding: 20px 16px; cursor: default; transition: all 0.3s; }
+    .game-card:hover { border-color: rgba(200,150,50,0.45); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
+    .game-icon { font-size: 32px; margin-bottom: 10px; }
+    .game-name { font-size: 14px; color: rgba(255,220,140,0.9); margin-bottom: 6px; letter-spacing: 0.5px; }
+    .game-cn { font-size: 11px; color: rgba(255,200,100,0.5); margin-bottom: 8px; }
+    .game-desc { font-size: 11px; color: rgba(255,255,255,0.38); line-height: 1.6; }
+    .game-tag { display: inline-block; margin-top: 10px; padding: 2px 8px; background: rgba(200,150,50,0.1); border: 1px solid rgba(200,150,50,0.2); border-radius: 3px; font-size: 10px; color: rgba(200,150,50,0.6); letter-spacing: 1px; }
+
+    /* ─── SOCCER OVERLAY ─── */
+    #boardgame-ui { width: min(92vw, 780px); background: #080a0e; border-radius: 14px; padding: 44px 44px; box-shadow: 0 0 80px rgba(60,100,200,0.12), 0 30px 80px rgba(0,0,0,0.85); }
+    .bg-title-label { font-size: 11px; letter-spacing: 5px; color: rgba(140,180,255,0.45); margin-bottom: 30px; text-transform: uppercase; text-align: center; }
+    .bg-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .bg-item { display: flex; gap: 16px; align-items: flex-start; background: rgba(255,255,255,0.03); border-radius: 10px; padding: 16px; }
+    .bg-cover { width: 90px; height: 90px; object-fit: cover; object-position: center top; border-radius: 6px; flex-shrink: 0; background: #111320; }
+    .bg-info { flex: 1; min-width: 0; }
+    .bg-name { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.92); margin-bottom: 6px; }
+    .bg-desc { font-size: 11px; color: rgba(255,255,255,0.35); line-height: 1.7; margin-bottom: 10px; }
+    .bg-tag { display: inline-block; font-size: 10px; letter-spacing: 1px; color: rgba(140,180,255,0.6); border: 1px solid rgba(100,140,255,0.2); border-radius: 20px; padding: 2px 9px; }
+
+    #vinyl-ui { width: min(72vw, 480px); background: #0a0808; border-radius: 12px; padding: 52px 48px; text-align: center; box-shadow: 0 0 80px rgba(180,80,80,0.15), 0 30px 80px rgba(0,0,0,0.85); }
+    .vinyl-disc { font-size: 100px; color: #cc4444; margin-bottom: 20px; transition: transform 0.3s; }
+    .vinyl-disc.spinning { animation: vinyl-spin 2s linear infinite; }
+    @keyframes vinyl-spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+    .vinyl-song { font-size: 22px; font-weight: 600; color: #fff; letter-spacing: 1px; margin-bottom: 8px; }
+    .vinyl-artist { font-size: 12px; letter-spacing: 4px; color: rgba(255,255,255,0.4); margin-bottom: 32px; text-transform: uppercase; }
+    #vinyl-play-btn { background: none; border: 1px solid rgba(255,255,255,0.25); color: rgba(255,255,255,0.8); padding: 12px 36px; border-radius: 40px; font-size: 13px; letter-spacing: 3px; cursor: pointer; transition: all 0.2s; }
+    #vinyl-play-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.5); }
+
+    #soccer-ui { width: min(72vw, 620px); background: #060e06; border-radius: 12px; padding: 52px 48px; text-align: center; box-shadow: 0 0 80px rgba(30,160,60,0.12), 0 30px 80px rgba(0,0,0,0.8); }
+    .soccer-ball-svg { font-size: 80px; margin-bottom: 28px; animation: spin 8s linear infinite; }
+    @keyframes spin { from{transform:rotate(0deg);} to{transform:rotate(360deg);} }
+    .soccer-title { font-size: 11px; letter-spacing: 5px; color: rgba(100,200,100,0.6); margin-bottom: 20px; }
+    .soccer-stat { display: flex; justify-content: center; gap: 40px; margin: 28px 0; }
+    .stat-item { text-align: center; }
+    .stat-val { font-size: 28px; color: rgba(100,220,100,0.85); margin-bottom: 4px; }
+    .stat-lbl { font-size: 10px; letter-spacing: 2px; color: rgba(255,255,255,0.3); }
+    .soccer-quote { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.8; font-style: italic; max-width: 380px; margin: 0 auto; }
+
+    /* ─── DOG OVERLAY ─── */
+    #dog-ui { width: min(72vw, 620px); background: #06060e; border-radius: 12px; padding: 52px 48px; text-align: center; box-shadow: 0 0 80px rgba(80,80,200,0.12), 0 30px 80px rgba(0,0,0,0.8); }
+    .dog-photo {
+      width: 112px;
+      height: 112px;
+      object-fit: cover;
+      object-position: center 24%;
+      border-radius: 50%;
+      margin-bottom: 12px;
+      border: 2px solid rgba(130, 140, 230, 0.45);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.45);
+      animation: waggle 1.5s ease-in-out infinite;
+    }
+    @keyframes waggle { 0%,100%{transform:rotate(-5deg);} 50%{transform:rotate(5deg);} }
+    .dog-title { font-size: 11px; letter-spacing: 5px; color: rgba(140,140,220,0.65); margin-bottom: 8px; }
+    .dog-name  { font-size: 38px; font-weight: 300; color: rgba(200,200,255,0.9); margin-bottom: 6px; }
+    .dog-breed { font-size: 12px; color: rgba(255,255,255,0.3); letter-spacing: 2px; margin-bottom: 28px; }
+    .dog-traits { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px; }
+    .dog-trait { background: rgba(80,80,160,0.2); border: 1px solid rgba(100,100,200,0.25); border-radius: 4px; padding: 5px 14px; font-size: 11px; color: rgba(180,180,255,0.65); letter-spacing: 1px; }
+    #shake-btn { background: rgba(60,60,120,0.4); color: rgba(180,180,255,0.85); border: 1px solid rgba(100,100,200,0.4); padding: 12px 36px; font-family: inherit; font-size: 12px; letter-spacing: 3px; cursor: pointer; border-radius: 6px; transition: all 0.3s; text-transform: uppercase; }
+    #shake-btn:hover { border-color: rgba(140,140,255,0.7); box-shadow: 0 0 24px rgba(100,100,200,0.3); color: #fff; }
+    #shake-btn:active { transform: scale(0.97); }
+    #shake-response { margin-top: 18px; font-size: 13px; color: rgba(180,180,255,0.6); min-height: 20px; }
+
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+  </style>
+</head>
+<body>
+
+<div id="intro">
+  <h1>LOADING ROOM</h1>
+  <p id="intro-status">loading models... 0%</p>
+  <div id="intro-progress"><div id="intro-progress-fill"></div></div>
+  <p id="intro-enter-hint">please wait</p>
+</div>
+
+<canvas id="canvas"></canvas>
+<div id="hint">click to explore</div>
+<div id="hover-label"></div>
+<button id="back-btn" onclick="goBack()">← back</button>
+
+<!-- ═══ COMPUTER OVERLAY ═══ -->
+<div id="computer-overlay" class="overlay">
+  <div id="monitor-bezel">
+    <div id="macos-screen">
+
+      <!-- Menu bar -->
+      <div id="macos-menubar">
+        <div class="mb-l">
+          <span class="mb-apple">&#xF8FF;</span>
+          <span class="mb-appname" id="mb-appname">Google Chrome</span>
+          <span class="mb-item">File</span>
+          <span class="mb-item">Edit</span>
+          <span class="mb-item">View</span>
+          <span class="mb-item">Window</span>
+        </div>
+        <div class="mb-r">
+          <span>⚡ 87%</span>
+          <span>📶</span>
+          <span id="mb-clock">11:42 PM</span>
+        </div>
+      </div>
+
+      <!-- Desktop -->
+      <div id="macos-desktop">
+
+        <!-- Finder app window -->
+        <div id="mac-finder" class="mac-window">
+          <div class="mac-titlebar">
+            <div class="mac-tl">
+              <div class="tlb tlb-r" onclick="macClose('finder')" title="Close"></div>
+              <div class="tlb tlb-y"></div>
+              <div class="tlb tlb-g" onclick="macMaximize('finder')"></div>
+            </div>
+            <div class="mac-wintitle">Finder</div>
+          </div>
+          <div class="finder-topbar">
+            <span>Recents</span>
+            <span>as list</span>
+          </div>
+          <div class="finder-body">
+            <div class="finder-sidebar">
+              <div class="finder-sec">Favorites</div>
+              <div class="finder-item active">⭐ Recents</div>
+              <div class="finder-item">🖥️ Desktop</div>
+              <div class="finder-item">📁 Documents</div>
+              <div class="finder-item">⬇️ Downloads</div>
+              <div class="finder-sec">Locations</div>
+              <div class="finder-item">💻 Macintosh HD</div>
+              <div class="finder-item">☁️ iCloud Drive</div>
+            </div>
+            <div class="finder-main">
+              <div class="finder-path">Recents</div>
+              <div class="finder-grid">
+                <div class="finder-file"><div class="finder-file-icon">🧠</div>AI Notes</div>
+                <div class="finder-file"><div class="finder-file-icon">📓</div>Research</div>
+                <div class="finder-file"><div class="finder-file-icon">🎮</div>Game Ideas</div>
+                <div class="finder-file"><div class="finder-file-icon">🧩</div>Boardgames</div>
+                <div class="finder-file"><div class="finder-file-icon">🖼️</div>Hacker.JPG</div>
+                <div class="finder-file"><div class="finder-file-icon">📦</div>personal-website</div>
+                <div class="finder-file"><div class="finder-file-icon">🛫</div>Travel</div>
+                <div class="finder-file"><div class="finder-file-icon">🎵</div>Sign of the Times.mp3</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VSCode app window -->
+        <div id="mac-vscode" class="mac-window">
+          <div class="mac-titlebar">
+            <div class="mac-tl">
+              <div class="tlb tlb-r" onclick="macClose('vscode')" title="Close"></div>
+              <div class="tlb tlb-y"></div>
+              <div class="tlb tlb-g" onclick="macMaximize('vscode')"></div>
+            </div>
+            <div class="mac-wintitle">train_dpo.py — Visual Studio Code</div>
+          </div>
+          <div class="vscode-body">
+            <div class="vs-sidebar">
+              <div class="vs-section">Explorer</div>
+              <div class="vs-file">📁 llm-posttraining</div>
+              <div class="vs-file active">　📄 train_dpo.py</div>
+              <div class="vs-file">　📄 reward_model.py</div>
+              <div class="vs-file">　📄 data_utils.py</div>
+              <div class="vs-file">　📄 configs.yaml</div>
+              <div class="vs-file">📁 evals</div>
+              <div class="vs-file">　📄 run_eval.py</div>
+              <div class="vs-file">　📄 metrics.py</div>
+              <div class="vs-file">📄 README.md</div>
+              <div class="vs-file">📄 requirements.txt</div>
+            </div>
+            <div class="vs-main">
+              <div class="vs-editor-tabs">
+                <div class="vs-editor-tab active">train_dpo.py</div>
+                <div class="vs-editor-tab">reward_model.py ×</div>
+              </div>
+              <div class="vs-code-area" id="code-area"></div>
+              <div class="vs-terminal" id="terminal-area"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chrome app window -->
+        <div id="mac-chrome" class="mac-window">
+          <div class="chrome-winbar">
+            <div class="mac-tl">
+              <div class="tlb tlb-r" onclick="macClose('chrome')"></div>
+              <div class="tlb tlb-y"></div>
+              <div class="tlb tlb-g"></div>
+            </div>
+            <div class="chrome-tabs-strip">
+              <div class="chrome-tab-item" id="chrome-tab-home" onclick="switchChromeTab('home')">
+                <div class="chrome-favicon" style="background:#2f65ff">Y</div>
+                <span class="chrome-tab-title">cacayaya.github.io</span>
+                <span style="color:rgba(255,255,255,0.35);font-size:14px;cursor:pointer" onclick="event.stopPropagation();closeChromeTab('home')">×</span>
+              </div>
+              <div class="chrome-tab-item inactive" id="chrome-tab-netflix" onclick="switchChromeTab('netflix')">
+                <div class="chrome-favicon">N</div>
+                <span class="chrome-tab-title">One Hundred Years of Solitude - Netflix</span>
+                <span style="color:rgba(255,255,255,0.35);font-size:14px;cursor:pointer" onclick="event.stopPropagation();closeChromeTab('netflix')">×</span>
+              </div>
+              <div style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);font-size:18px;cursor:pointer;margin-left:4px;margin-bottom:2px">+</div>
+            </div>
+          </div>
+          <div class="chrome-addrbar">
+            <button class="cnav" id="chrome-back-btn" onclick="chromeGoBack()">←</button>
+            <button class="cnav" id="chrome-forward-btn" onclick="chromeGoForward()">→</button>
+            <button class="cnav" id="chrome-refresh-btn" onclick="chromeRefresh()">↻</button>
+            <div class="chrome-url">
+              <span class="chrome-url-lock">🔒</span>
+              <span id="chrome-url-text">cacayaya.github.io</span>
+            </div>
+          </div>
+          <div class="chrome-bookmarks">
+            <button class="chrome-shortcut-btn" onclick="openChromeUrl(CHROME_HOME_URL)">Homepage</button>
+            <button class="chrome-shortcut-btn" onclick="reopenChromeTab('netflix')">Netflix</button>
+          </div>
+          <div class="chrome-content">
+            <div class="chrome-page chrome-home active" id="chrome-page-home">
+              <iframe id="chrome-home-frame" class="chrome-home-frame" src="https://cacayaya.github.io/" title="Yifan Wang Personal Website"></iframe>
+            </div>
+            <div class="chrome-page" id="chrome-page-netflix">
+              <div class="nf-header">
+                <div class="nf-logo">NETFLIX</div>
+                <div class="nf-nav">
+                  <span>Home</span><span>Series</span><span>Films</span><span>New &amp; Popular</span>
+                </div>
+              </div>
+              <div class="nf-hero">
+                <div class="nf-hero-bg"></div>
+                <div class="nf-more-lbl">⭐ FAVORITE OF 2024</div>
+                <div class="nf-herotext">
+                  <div class="nf-badge">SERIES · SEASON 1 · 2024</div>
+                  <div class="nf-title"><em>One Hundred Years<br>of Solitude</em></div>
+                  <div class="nf-meta">Based on Gabriel Garcia Marquez's Nobel Prize-winning novel. The Buendia family across seven generations in the mythical town of Macondo, where magic and reality are indistinguishable.</div>
+                  <div class="nf-btns">
+                    <button class="nf-btn">▶  Play</button>
+                    <button class="nf-btn2">ℹ More Info</button>
+                  </div>
+                  <div class="nf-stars">★★★★★</div>
+                </div>
+              </div>
+            </div>
+            <div class="chrome-page chrome-empty" id="chrome-page-empty">all tabs closed</div>
+          </div>
+        </div>
+
+        <!-- Outlook app window -->
+        <div id="mac-outlook" class="mac-window">
+          <div class="mac-titlebar">
+            <div class="mac-tl">
+              <div class="tlb tlb-r" onclick="macClose('outlook')" title="Close"></div>
+              <div class="tlb tlb-y"></div>
+              <div class="tlb tlb-g" onclick="macMaximize('outlook')"></div>
+            </div>
+            <div class="mac-wintitle">Outlook</div>
+          </div>
+          <div class="outlook-shell">
+            <div class="outlook-topbar">
+              <div class="outlook-top-left">
+                <span>☰</span>
+                <span style="font-weight:600;">Outlook</span>
+                <div class="outlook-search">🔎&nbsp; Search</div>
+              </div>
+              <div>⚙︎ &nbsp; ○</div>
+            </div>
+            <div class="outlook-toolbar">
+              <span>File</span>
+              <span class="active">Home</span>
+              <span>View</span>
+              <span>Help</span>
+              <span style="margin-left:18px;background:#0f6cbd;color:#fff;padding:5px 12px;border-radius:6px;">New mail</span>
+              <span>Delete</span>
+              <span>Archive</span>
+              <span>Quick steps</span>
+            </div>
+            <div class="outlook-main">
+              <div class="outlook-rail">
+                <span>📧</span>
+                <span>🗓</span>
+                <span>👥</span>
+                <span>✅</span>
+              </div>
+              <div class="outlook-folders">
+                <div class="outlook-acct">wang5617@purdue.edu</div>
+                <div class="outlook-folder active"><span>📥 Inbox</span><span>1</span></div>
+                <div class="outlook-folder"><span>📝 Drafts</span><span>0</span></div>
+                <div class="outlook-folder"><span>📤 Sent Items</span><span>0</span></div>
+                <div class="outlook-folder"><span>🗑 Deleted Items</span><span>0</span></div>
+              </div>
+              <div class="outlook-list">
+                <div class="outlook-list-head">Inbox</div>
+                <div class="mail-item">
+                  <div class="mail-item-from">Yifan Wang</div>
+                  <div class="mail-item-subj">A curious hello from the digital desk</div>
+                  <div class="mail-item-preview">If you found this message, we should probably connect...</div>
+                </div>
+              </div>
+              <div class="outlook-read">
+                <div class="compose-toolbar">
+                  <span class="compose-send">Send</span>
+                  <span>Discard</span>
+                  <span>Attach</span>
+                  <span>Insert</span>
+                  <span>⋯</span>
+                </div>
+                <div class="compose-pane">
+                  <div class="compose-line">
+                    <div class="label">To</div>
+                    <div class="value">whoever is exploring this room</div>
+                  </div>
+                  <div class="compose-line">
+                    <div class="label">Cc</div>
+                    <div class="value"></div>
+                  </div>
+                  <div class="compose-subject">A curious hello from the digital desk</div>
+                  <div class="compose-editor">
+                    <p>Dear who is looking at this email,</p>
+                    <p>
+                      You just discovered the hidden inbox inside my room scene. That means you are curious, and curious people are my favorite people to meet.
+                      If you want to connect, talk ideas, or build something fun together, here is where you can find me:
+                    </p>
+                    <p>
+                      Email: <a href="mailto:yifanwang100@gmail.com">yifanwang100@gmail.com</a><br>
+                      LinkedIn: <a href="https://www.linkedin.com/in/yifan-wang-66521524b/" target="_blank" rel="noopener noreferrer">linkedin.com/in/yifan-wang-66521524b</a><br>
+                      X: <a href="https://x.com/YifanWang_Amber" target="_blank" rel="noopener noreferrer">x.com/YifanWang_Amber</a><br>
+                      GitHub: <a href="https://github.com/cacayaya" target="_blank" rel="noopener noreferrer">github.com/cacayaya</a>
+                    </p>
+                    <p>Thanks for stopping by,<br>Yifan</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dock -->
+        <div id="macos-dock">
+          <div class="dock-bg">
+            <div class="di di-finder" onclick="macOpen('finder')" title="Finder">
+              <div class="dock-ib"><img class="dock-app-icon finder" src="./app-icon/dock/finder-dock.png" alt="Finder icon"></div>
+              <div class="dock-dot" id="dot-finder"></div>
+              <div class="dock-tooltip">Finder</div>
+            </div>
+            <div class="di di-vscode" onclick="macOpen('vscode')" title="VSCode">
+              <div class="dock-ib"><img class="dock-app-icon" src="./app-icon/dock/vscode-dock.png" alt="VSCode icon"></div>
+              <div class="dock-dot" id="dot-vscode"></div>
+              <div class="dock-tooltip">Visual Studio Code</div>
+            </div>
+            <div class="di di-chrome" onclick="macOpen('chrome')" title="Chrome">
+              <div class="dock-ib"><img class="dock-app-icon" src="./app-icon/dock/chrome-dock.png" alt="Chrome icon"></div>
+              <div class="dock-dot on" id="dot-chrome"></div>
+              <div class="dock-tooltip">Google Chrome</div>
+            </div>
+            <div class="di di-outlook" onclick="macOpen('outlook')" title="Outlook">
+              <div class="dock-ib"><img class="dock-app-icon" src="./app-icon/dock/outlook-dock.png" alt="Outlook icon"></div>
+              <div class="dock-dot" id="dot-outlook"></div>
+              <div class="dock-tooltip">Outlook</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /macos-desktop -->
+    </div><!-- /macos-screen -->
+    <div id="monitor-chin"><span class="chin-logo">&#xF8FF;</span></div>
+  </div><!-- /monitor-bezel -->
+</div>
+
+<!-- ─── SOCCER OVERLAY ─── -->
+<div id="soccer-overlay" class="overlay">
+  <div id="soccer-ui">
+    <div class="soccer-ball-svg">⚽</div>
+    <div class="soccer-title">football</div>
+    <div class="soccer-stat">
+      <div class="stat-item"><div class="stat-val">⚡</div><div class="stat-lbl">Position</div></div>
+      <div class="stat-item"><div class="stat-val" style="font-size:18px">Midfielder</div><div class="stat-lbl"> </div></div>
+    </div>
+    <div class="soccer-quote">
+      "The ball is round, the game lasts ninety minutes, everything else is just theory."
+    </div>
+  </div>
+</div>
+
+<!-- ─── BOARD GAME OVERLAY ─── -->
+<div id="boardgame-overlay" class="overlay">
+  <div id="boardgame-ui">
+    <div class="bg-title-label">My Favorite Board Games</div>
+    <div class="bg-list">
+      <div class="bg-item">
+        <img class="bg-cover" src="./boardgames/ark%20nova.webp" alt="Ark Nova" onerror="this.style.display='none'">
+        <div class="bg-info">
+          <div class="bg-name">Ark Nova</div>
+          <div class="bg-desc">Plan and build a modern, scientifically managed zoo. Support conservation projects through a card-driven engine where five Action cards shift in power.</div>
+          <span class="bg-tag">1 – 4 players</span>
+        </div>
+      </div>
+      <div class="bg-item">
+        <img class="bg-cover" src="./boardgames/seti.webp" alt="SETI" onerror="this.style.display='none'">
+        <div class="bg-info">
+          <div class="bg-name">SETI</div>
+          <div class="bg-desc">Launch probes, direct telescopes, and develop technology to search for signs of extraterrestrial intelligence using real-world science and discoveries.</div>
+          <span class="bg-tag">1 – 4 players</span>
+        </div>
+      </div>
+      <div class="bg-item">
+        <img class="bg-cover" src="./boardgames/everdell.webp" alt="Everdell" onerror="this.style.display='none'">
+        <div class="bg-info">
+          <div class="bg-name">Everdell</div>
+          <div class="bg-desc">Beneath the boughs of towering trees, gather resources and recruit woodland critters to build a flourishing village across four seasons.</div>
+          <span class="bg-tag">1 – 4 players</span>
+        </div>
+      </div>
+      <div class="bg-item">
+        <img class="bg-cover" src="./boardgames/splendor.webp" alt="Splendor" onerror="this.style.display='none'">
+        <div class="bg-info">
+          <div class="bg-name">Splendor</div>
+          <div class="bg-desc">As a Renaissance gem merchant, collect tokens, acquire mines and trade routes, and attract nobles to build the most prestigious jewelry empire.</div>
+          <span class="bg-tag">2 – 4 players</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ─── VINYL OVERLAY ─── -->
+<div id="vinyl-overlay" class="overlay">
+  <div id="vinyl-ui">
+    <div class="vinyl-disc" id="vinyl-disc">◉</div>
+    <div class="vinyl-song">Sign of the Times</div>
+    <div class="vinyl-artist">Harry Styles</div>
+    <div class="vinyl-controls">
+      <button id="vinyl-play-btn" onclick="toggleVinyl()">▶ play</button>
+    </div>
+  </div>
+</div>
+
+<!-- ─── DOG OVERLAY ─── -->
+<div id="dog-overlay" class="overlay">
+  <div id="dog-ui">
+    <img class="dog-photo" src="./hacker/hacker.JPG" alt="Hacker">
+    <div class="dog-title">My dog</div>
+    <div class="dog-name">Hacker</div>
+    <div class="dog-breed">pomsky · <span id="dog-age">loading age...</span> · Always Online</div>
+    <div class="dog-traits">
+      <span class="dog-trait">TREAT HUNTER</span>
+      <span class="dog-trait">DEBUG COMPANION</span>
+      <span class="dog-trait">BELLY RUB ENJOYER</span>
+    </div>
+    <button id="shake-btn" onclick="shakeHands()">shake hands</button>
+    <div id="shake-response"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="./vendor-gltfloader.js"></script>
+<script src="./model-assets.js"></script>
+<script src="./adidas-ball-asset.js?v=2"></script>
+<script src="./adidas-ball-texture.js?v=1"></script>
+<script src="./scene-settings.js"></script>
+<script>
+const SETTINGS = window.SCENE_SETTINGS || {
+  colors: { background: 0xf4f7fc, fog: 0xf4f7fc },
+  fogDensity: 0.022,
+  toneMappingExposure: 1.5,
+  models: { deskPath: './desk_set.glb' },
+};
+// ═══════════════════════════════════════════════════════
+//  SCENE SETUP
+// ═══════════════════════════════════════════════════════
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(SETTINGS.colors.background);
+scene.fog = new THREE.FogExp2(SETTINGS.colors.fog, SETTINGS.fogDensity);
+
+const camera = new THREE.PerspectiveCamera(62, innerWidth / innerHeight, 0.1, 60);
+camera.position.set(0, 1.75, 4);
+camera.lookAt(0, 1.2, 0);
+
+const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.LinearToneMapping;
+renderer.toneMappingExposure = SETTINGS.toneMappingExposure;
+
+const intro = document.getElementById('intro');
+const introStatus = document.getElementById('intro-status');
+const introProgressFill = document.getElementById('intro-progress-fill');
+const introEnterHint = document.getElementById('intro-enter-hint');
+let introModelsReady = false;
+let introEnterQueued = false;
+function setIntroProgress(loaded, total, label = 'loading models') {
+  const pct = total > 0 ? Math.round((loaded / total) * 100) : 0;
+  if (introStatus) introStatus.textContent = `${label}... ${pct}%`;
+  if (introProgressFill) introProgressFill.style.width = `${pct}%`;
+}
+function onIntroModelsReady() {
+  introModelsReady = true;
+  if (introStatus) introStatus.textContent = 'loading complete';
+  if (introProgressFill) introProgressFill.style.width = '100%';
+  if (introEnterHint) {
+    introEnterHint.textContent = 'press any key or click to enter';
+    introEnterHint.classList.add('ready');
+  }
+  if (introEnterQueued) enterRoom();
+}
+
+// ═══════════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════════
+function box(w, h, d, color, opts = {}) {
+  const g = new THREE.BoxGeometry(w, h, d);
+  const m = new THREE.MeshStandardMaterial({
+    color,
+    emissive: opts.emissive || 0x000000,
+    emissiveIntensity: opts.ei || 0,
+    transparent: opts.transparent || false,
+    opacity: opts.opacity || 1,
+    roughness: opts.roughness ?? 0.72,
+    metalness: opts.metalness ?? 0.08,
+  });
+  const mesh = new THREE.Mesh(g, m);
+  if (opts.castShadow !== false) mesh.castShadow = true;
+  if (opts.receiveShadow !== false) mesh.receiveShadow = true;
+  return mesh;
+}
+function sphere(r, color, opts = {}) {
+  const g = new THREE.SphereGeometry(r, opts.widthSegs || 22, opts.heightSegs || 18);
+  const m = new THREE.MeshStandardMaterial({
+    color,
+    emissive: opts.emissive || 0x000000,
+    emissiveIntensity: opts.ei || 0,
+    roughness: opts.roughness ?? 0.62,
+    metalness: opts.metalness ?? 0.06,
+  });
+  const mesh = new THREE.Mesh(g, m);
+  mesh.castShadow = true;
+  mesh.receiveShadow = opts.receiveShadow !== false;
+  return mesh;
+}
+function makeSoccerPatternTextures() {
+  const W = 1024;
+  const H = 512;
+  const colorCanvas = document.createElement('canvas');
+  colorCanvas.width = W;
+  colorCanvas.height = H;
+  const bumpCanvas = document.createElement('canvas');
+  bumpCanvas.width = W;
+  bumpCanvas.height = H;
+  const roughCanvas = document.createElement('canvas');
+  roughCanvas.width = W;
+  roughCanvas.height = H;
+
+  const color = colorCanvas.getContext('2d');
+  const bump = bumpCanvas.getContext('2d');
+  const rough = roughCanvas.getContext('2d');
+
+  color.fillStyle = '#d8d2c5';
+  color.fillRect(0, 0, W, H);
+  bump.fillStyle = '#8e8e8e';
+  bump.fillRect(0, 0, W, H);
+  rough.fillStyle = '#c9c9c9';
+  rough.fillRect(0, 0, W, H);
+
+  const grime = color.createRadialGradient(W * 0.5, H * 0.5, H * 0.1, W * 0.5, H * 0.5, H * 0.78);
+  grime.addColorStop(0, 'rgba(245,242,232,0.22)');
+  grime.addColorStop(1, 'rgba(76,64,52,0.24)');
+  color.fillStyle = grime;
+  color.fillRect(0, 0, W, H);
+
+  const panelRows = 5;
+  for (let row = 0; row < panelRows; row++) {
+    const y = 64 + row * 98;
+    const cols = row % 2 === 0 ? 8 : 7;
+    for (let col = 0; col < cols; col++) {
+      const x = (row % 2 === 0 ? 74 : 140) + col * 132;
+      const r = 44;
+      const points = [];
+      for (let i = 0; i < 5; i++) {
+        const a = -Math.PI / 2 + i * ((Math.PI * 2) / 5);
+        points.push([x + r * Math.cos(a), y + r * Math.sin(a)]);
+      }
+
+      color.beginPath();
+      bump.beginPath();
+      rough.beginPath();
+      points.forEach(([px, py], i) => {
+        if (i === 0) {
+          color.moveTo(px, py);
+          bump.moveTo(px, py);
+          rough.moveTo(px, py);
+        } else {
+          color.lineTo(px, py);
+          bump.lineTo(px, py);
+          rough.lineTo(px, py);
+        }
+      });
+      color.closePath();
+      bump.closePath();
+      rough.closePath();
+
+      color.fillStyle = '#1a1a1a';
+      color.fill();
+      bump.fillStyle = '#858585';
+      bump.fill();
+      rough.fillStyle = '#b3b3b3';
+      rough.fill();
+
+      color.strokeStyle = 'rgba(12,12,12,0.95)';
+      color.lineWidth = 4;
+      color.stroke();
+      bump.strokeStyle = '#555555';
+      bump.lineWidth = 4;
+      bump.stroke();
+      rough.strokeStyle = '#e3e3e3';
+      rough.lineWidth = 2;
+      rough.stroke();
+    }
+  }
+
+  for (let i = 0; i < 1600; i++) {
+    const x = Math.random() * W;
+    const y = Math.random() * H;
+    const alpha = 0.03 + Math.random() * 0.045;
+    color.fillStyle = `rgba(0,0,0,${alpha})`;
+    color.fillRect(x, y, 2, 2);
+    rough.fillStyle = `rgba(255,255,255,${0.03 + Math.random() * 0.04})`;
+    rough.fillRect(x, y, 2, 2);
+  }
+
+  const seamRows = 8;
+  for (let i = 0; i < seamRows; i++) {
+    const yy = 28 + i * 64;
+    color.strokeStyle = 'rgba(18,18,18,0.24)';
+    color.lineWidth = 2;
+    color.beginPath();
+    color.moveTo(0, yy);
+    color.lineTo(W, yy);
+    color.stroke();
+
+    bump.strokeStyle = '#5e5e5e';
+    bump.lineWidth = 3;
+    bump.beginPath();
+    bump.moveTo(0, yy);
+    bump.lineTo(W, yy);
+    bump.stroke();
+
+    rough.strokeStyle = '#f1f1f1';
+    rough.lineWidth = 2;
+    rough.beginPath();
+    rough.moveTo(0, yy);
+    rough.lineTo(W, yy);
+    rough.stroke();
+  }
+
+  const colorTex = new THREE.CanvasTexture(colorCanvas);
+  colorTex.colorSpace = THREE.SRGBColorSpace;
+  colorTex.anisotropy = 8;
+
+  const bumpTex = new THREE.CanvasTexture(bumpCanvas);
+  bumpTex.anisotropy = 8;
+
+  const roughTex = new THREE.CanvasTexture(roughCanvas);
+  roughTex.anisotropy = 8;
+
+  return { colorMap: colorTex, bumpMap: bumpTex, roughnessMap: roughTex };
+}
+function makeGameTex(name, colors, emoji) {
+  const c = document.createElement('canvas');
+  c.width = 512; c.height = 512;
+  const ctx = c.getContext('2d');
+  const grad = ctx.createLinearGradient(0, 0, 512, 512);
+  colors.forEach((col, i) => grad.addColorStop(i / (colors.length - 1), col));
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 512, 512);
+  // subtle hex pattern overlay
+  ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+  ctx.lineWidth = 1.5;
+  for (let row = 0; row < 8; row++) for (let col = 0; col < 8; col++) {
+    const cx = col * 70 + (row % 2) * 35, cy = row * 62;
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) { const a = i * Math.PI / 3 - Math.PI / 6; ctx.lineTo(cx + 28 * Math.cos(a), cy + 28 * Math.sin(a)); }
+    ctx.closePath(); ctx.stroke();
+  }
+  // publisher bar at top
+  ctx.fillStyle = 'rgba(0,0,0,0.35)';
+  ctx.fillRect(0, 0, 512, 60);
+  ctx.fillStyle = 'rgba(0,0,0,0.45)';
+  ctx.fillRect(0, 390, 512, 122);
+  // emoji icon
+  ctx.font = '140px serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(emoji, 256, 310);
+  // game title
+  ctx.fillStyle = '#ffffff';
+  ctx.shadowColor = 'rgba(0,0,0,0.8)';
+  ctx.shadowBlur = 12;
+  ctx.font = 'bold 62px sans-serif';
+  ctx.fillText(name, 256, 460);
+  ctx.shadowBlur = 0;
+  // thin border
+  ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+  ctx.lineWidth = 5;
+  ctx.strokeRect(6, 6, 500, 500);
+  return new THREE.CanvasTexture(c);
+}
+function makeGameSpineTex(name, color) {
+  const c = document.createElement('canvas');
+  c.width = 128; c.height = 512;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = color;
+  ctx.fillRect(0, 0, 128, 512);
+  ctx.fillStyle = 'rgba(0,0,0,0.25)';
+  ctx.fillRect(0, 0, 128, 512);
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 22px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.save();
+  ctx.translate(64, 256);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText(name, 0, 8);
+  ctx.restore();
+  return new THREE.CanvasTexture(c);
+}
+function cyl(rt, rb, h, color, segs = 12) {
+  const g = new THREE.CylinderGeometry(rt, rb, h, segs);
+  const m = new THREE.MeshStandardMaterial({ color, roughness: 0.6, metalness: 0.15 });
+  const mesh = new THREE.Mesh(g, m);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  return mesh;
+}
+function torus(r, t, color, opts = {}) {
+  const g = new THREE.TorusGeometry(r, t, opts.radialSegs || 14, opts.tubularSegs || 28);
+  const m = new THREE.MeshStandardMaterial({
+    color,
+    roughness: opts.roughness ?? 0.5,
+    metalness: opts.metalness ?? 0.2,
+  });
+  const mesh = new THREE.Mesh(g, m);
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  return mesh;
+}
+
+// ═══════════════════════════════════════════════════════
+//  LIGHTING  — night mode, desk lamp as key light
+// ═══════════════════════════════════════════════════════
+// Dark-but-visible ambient — cool night blue, bright enough to see shapes
+scene.add(new THREE.AmbientLight(0x1a2035, 1.2));
+scene.add(new THREE.HemisphereLight(0x1e2a40, 0x100a04, 0.5));
+
+// Ceiling lights off (night)
+const ceilingLight = new THREE.PointLight(0xfff4e3, 0.0, 34);
+ceilingLight.position.set(0, 6.5, -1);
+scene.add(ceilingLight);
+const ceilingLight2 = new THREE.PointLight(0xfff8ea, 0.0, 26);
+ceilingLight2.position.set(0, 6.5, -5);
+scene.add(ceilingLight2);
+
+// No directional sunlight at night
+const frontFill = new THREE.DirectionalLight(0xffffff, 0.0);
+frontFill.position.set(2.8, 4.6, 5.5);
+scene.add(frontFill);
+const sideFill = new THREE.DirectionalLight(0xf2f7ff, 0.0);
+sideFill.position.set(-4.2, 3.0, 3.8);
+scene.add(sideFill);
+
+// Dim cool fill for dog/soccer corners — enough to see silhouettes
+const dogFill = new THREE.PointLight(0x314a7a, 3.2, 8.0);
+dogFill.position.set(-2.45, 1.2, -0.6);
+scene.add(dogFill);
+
+// Soccer helper lights (world-space, centered on actual soccer area near x=-1.5,z=-1.75).
+const soccerFill = new THREE.PointLight(0x7f92c8, 0.0, 0.9, 2.8);
+soccerFill.position.set(-1.52, 0.42, -1.72);
+scene.add(soccerFill);
+// Dedicated key light for football details (keeps black/white panels readable).
+const soccerKey = new THREE.PointLight(0xf1f6ff, 0.0, 0.95, 3.0);
+soccerKey.position.set(-1.34, 0.68, -1.6);
+scene.add(soccerKey);
+// Very soft front fill to avoid a large black patch on the camera-facing side.
+const soccerFrontFill = new THREE.PointLight(0xffffff, 0.0, 0.9, 3.0);
+soccerFrontFill.position.set(-1.7, 0.62, -1.52);
+scene.add(soccerFrontFill);
+// Top-only fill to remove persistent dark upper hemisphere on the ball.
+const soccerTopFill = new THREE.PointLight(0xf6fbff, 0.0, 0.8, 3.2);
+soccerTopFill.position.set(-1.48, 1.15, -1.72);
+scene.add(soccerTopFill);
+
+// Extra fill for right-side vinyl table so dark materials remain visible.
+const sideTableFill = new THREE.PointLight(0xffb36a, 3.8, 7.0, 1.6);
+sideTableFill.position.set(3.25, 1.35, -1.25);
+scene.add(sideTableFill);
+
+// Desk lamp lights — positions updated after GLB loads (see lampBulbWorld detection below)
+const deskLamp = new THREE.PointLight(0xffb060, 50.0, 20.0, 0.8);
+deskLamp.castShadow = true;
+deskLamp.shadow.mapSize.width = 1024;
+deskLamp.shadow.mapSize.height = 1024;
+deskLamp.shadow.camera.near = 0.1;
+deskLamp.shadow.camera.far = 18;
+deskLamp.shadow.radius = 6;
+scene.add(deskLamp);
+
+const lampGlow = new THREE.PointLight(0xff9030, 8.0, 4.0, 1.6);
+scene.add(lampGlow);
+
+// Laptop screen glow — bright blue-white light emanating from the screen face
+// World position: screen center is ~(0, 1.0, -2.0), light sits just in front of it
+const monitorLight = new THREE.PointLight(0x9bbfff, 0.0, 4.5, 1.6);
+monitorLight.position.set(0, 1.02, -1.85);
+scene.add(monitorLight);
+
+
+// ═══════════════════════════════════════════════════════
+//  ROOM
+// ═══════════════════════════════════════════════════════
+const wallColor = 0x1a1f30;
+const floorColor = 0x1a1508;
+
+// Infinite floor — fog hides the edges
+const floorMesh = new THREE.Mesh(
+  new THREE.PlaneGeometry(200, 200),
+  new THREE.MeshLambertMaterial({ color: floorColor })
+);
+floorMesh.rotation.x = -Math.PI / 2;
+floorMesh.receiveShadow = true;
+scene.add(floorMesh);
+
+
+// ═══════════════════════════════════════════════════════
+//  COMPUTER DESK  (center-back) — GLB model only
+// ═══════════════════════════════════════════════════════
+const deskGroup = new THREE.Group();
+deskGroup.position.set(0, 0, -2.0);
+const deskModelAnchor = new THREE.Group();
+deskGroup.add(deskModelAnchor);
+let deskSurfaceY = 0.75; // updated after desk GLB loads
+
+const computerModelAnchor = new THREE.Group();
+computerModelAnchor.position.set(0, deskSurfaceY, -0.32);
+deskGroup.add(computerModelAnchor);
+
+const computerTarget = new THREE.Mesh(
+  new THREE.BoxGeometry(1.2, 0.72, 0.85),
+  new THREE.MeshBasicMaterial({ visible: false })
+);
+computerTarget.position.set(0, deskSurfaceY + 0.34, -0.38);
+computerTarget.userData.label = 'computer';
+computerTarget.userData.type = 'computer';
+deskGroup.add(computerTarget);
+
+scene.add(deskGroup);
+
+const deskClickTarget = new THREE.Mesh(
+  new THREE.BoxGeometry(2.9, 1.6, 1.45),
+  new THREE.MeshBasicMaterial({ visible: false })
+);
+deskClickTarget.position.set(0, 0.8, -0.05);
+deskClickTarget.userData.label = 'desk';
+deskClickTarget.userData.type = 'desk';
+deskGroup.add(deskClickTarget);
+
+// ═══════════════════════════════════════════════════════
+//  SOCCER CORNER  (right-front)
+// ═══════════════════════════════════════════════════════
+const soccerGroup = new THREE.Group();
+soccerGroup.position.set(-1.5, 0, -1.75);
+const footballModelAnchor = new THREE.Group();
+footballModelAnchor.position.set(0, 0, 0.02);
+soccerGroup.add(footballModelAnchor);
+
+const soccerTarget = new THREE.Mesh(new THREE.BoxGeometry(0.95, 0.7, 0.95), new THREE.MeshBasicMaterial({ visible: false }));
+soccerTarget.position.set(0, 0.34, 0.02);
+soccerTarget.userData.label = 'football'; soccerTarget.userData.type = 'soccer';
+soccerGroup.add(soccerTarget);
+scene.add(soccerGroup);
+
+// ═══════════════════════════════════════════════════════
+//  VINYL DESK  (right of soccer ball)
+// ═══════════════════════════════════════════════════════
+const vinylDeskGroup = new THREE.Group();
+// Alongside the main desk on the right (main desk centered at x=0, z=-2.0)
+vinylDeskGroup.position.set(2.4, 0, -2.0);
+const vinylDeskModelAnchor = new THREE.Group();
+const vinylPlayerAnchor = new THREE.Group();
+vinylDeskGroup.add(vinylDeskModelAnchor);
+vinylDeskGroup.add(vinylPlayerAnchor);
+
+const vinylTarget = new THREE.Mesh(
+  new THREE.BoxGeometry(0.9, 0.3, 0.9),
+  new THREE.MeshBasicMaterial({ visible: false })
+);
+vinylTarget.position.set(0, 0.9, 0);
+vinylTarget.userData.label = 'vinyl player';
+vinylTarget.userData.type = 'vinyl';
+vinylDeskGroup.add(vinylTarget);
+
+const boardGameTarget = new THREE.Mesh(
+  new THREE.BoxGeometry(0.9, 0.28, 0.7),
+  new THREE.MeshBasicMaterial({ visible: false })
+);
+boardGameTarget.position.set(0, 0.3, 0);
+boardGameTarget.userData.label = 'board games';
+boardGameTarget.userData.type = 'boardgame';
+vinylDeskGroup.add(boardGameTarget);
+
+// Click target for the small table as a whole (from room view)
+const smallTableTarget = new THREE.Mesh(
+  new THREE.BoxGeometry(1.0, 1.1, 0.9),
+  new THREE.MeshBasicMaterial({ visible: false })
+);
+smallTableTarget.position.set(0, 0.55, 0);
+smallTableTarget.userData.type = 'smalltable';
+vinylDeskGroup.add(smallTableTarget);
+
+scene.add(vinylDeskGroup);
+
+// ═══════════════════════════════════════════════════════
+//  DOG — HACKER  (left-front corner)
+// ═══════════════════════════════════════════════════════
+const dogGroup = new THREE.Group();
+dogGroup.position.set(-2.2, 0, -1.2);
+dogGroup.rotation.y = -0.6;  // facing slightly toward camera
+const dogModelAnchor = new THREE.Group();
+dogModelAnchor.position.set(0, 0, 0);
+dogGroup.add(dogModelAnchor);
+
+const dogTarget = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.35, 1.3), new THREE.MeshBasicMaterial({ visible: false }));
+dogTarget.position.set(0, 0.68, 0);
+dogTarget.userData.label = 'Hacker 🐾'; dogTarget.userData.type = 'dog';
+dogGroup.add(dogTarget);
+scene.add(dogGroup);
+
+// ═══════════════════════════════════════════════════════
+//  GLB MODELS
+// ═══════════════════════════════════════════════════════
+const animationMixers = [];
+let dogMixer = null;
+let dogAnimationActions = {};
+let dogActiveAction = null;
+let dogDisplayColorMap = null;
+
+function prepModel(root) {
+  root.traverse(obj => {
+    if (!obj.isMesh) return;
+    obj.castShadow = true;
+    obj.receiveShadow = true;
+    if (Array.isArray(obj.material)) {
+      obj.material = obj.material.map(mat => mat.clone());
+    } else if (obj.material) {
+      obj.material = obj.material.clone();
+    }
+  });
+}
+function fitModelToHeight(root, targetHeight) {
+  const box = new THREE.Box3().setFromObject(root);
+  const size = box.getSize(new THREE.Vector3());
+  const currentHeight = size.y || 1;
+  const scale = targetHeight / currentHeight;
+  root.scale.multiplyScalar(scale);
+  return scale;
+}
+function fitModelToWidth(root, targetWidth) {
+  const box = new THREE.Box3().setFromObject(root);
+  const size = box.getSize(new THREE.Vector3());
+  const currentWidth = size.x || 1;
+  const scale = targetWidth / currentWidth;
+  root.scale.multiplyScalar(scale);
+  return scale;
+}
+function placeModelOnGround(root, groundY = 0) {
+  const box = new THREE.Box3().setFromObject(root);
+  root.position.y += groundY - box.min.y;
+}
+function centerModelXZ(root, targetX = 0, targetZ = 0) {
+  const box = new THREE.Box3().setFromObject(root);
+  const center = box.getCenter(new THREE.Vector3());
+  root.position.x += targetX - center.x;
+  root.position.z += targetZ - center.z;
+}
+function getDeskSurfaceYAtLocalXZ(deskRoot, hostGroup, localX, localZ) {
+  const originWorld = hostGroup.localToWorld(new THREE.Vector3(localX, 6, localZ));
+  const raycaster = new THREE.Raycaster(originWorld, new THREE.Vector3(0, -1, 0), 0, 20);
+  const hits = raycaster.intersectObject(deskRoot, true).filter(h => h.object && h.object.isMesh);
+  if (!hits.length) return null;
+  const localHit = hostGroup.worldToLocal(hits[0].point.clone());
+  return localHit.y;
+}
+function playDogAnimation(name, { loop = THREE.LoopRepeat, clampWhenFinished = false, fade = 0.22 } = {}) {
+  const next = dogAnimationActions[name];
+  if (!next) return;
+  next.enabled = true;
+  next.reset();
+  next.setLoop(loop, loop === THREE.LoopOnce ? 1 : Infinity);
+  next.clampWhenFinished = clampWhenFinished;
+  next.fadeIn(fade).play();
+  if (dogActiveAction && dogActiveAction !== next) dogActiveAction.fadeOut(fade);
+  dogActiveAction = next;
+}
+// screenMat is the shared material applied to the laptop screen mesh.
+// captureDesktopToScreen() snapshots #macos-desktop with html2canvas and updates it.
+let screenMat = null;
+
+function captureDesktopToScreen() {
+  const el = document.getElementById('macos-desktop');
+  if (!el || !screenMat || typeof html2canvas === 'undefined') return;
+
+  const overlay = document.getElementById('computer-overlay');
+  const prevVis = overlay.style.visibility;
+  const prevOp  = overlay.style.opacity;
+  const prevPE  = overlay.style.pointerEvents;
+  overlay.style.visibility = 'visible';
+  overlay.style.opacity    = '1';
+  overlay.style.pointerEvents = 'none';
+
+  // Hide window titlebars and dock so they don't appear on the 3D screen
+  const titlebars = el.querySelectorAll('.mac-titlebar');
+  titlebars.forEach(tb => (tb.style.visibility = 'hidden'));
+  const dock = document.getElementById('macos-dock');
+  if (dock) dock.style.visibility = 'hidden';
+
+  html2canvas(el, {
+    scale: 1, useCORS: true, allowTaint: true, logging: false,
+    // Skip any fixed-position elements outside the overlay that might bleed in
+    ignoreElements: node => node.style && window.getComputedStyle(node).position === 'fixed'
+                            && !node.closest('#computer-overlay'),
+  }).then(canvas => {
+    overlay.style.visibility    = prevVis;
+    overlay.style.opacity       = prevOp;
+    overlay.style.pointerEvents = prevPE;
+    titlebars.forEach(tb => (tb.style.visibility = ''));
+    if (dock) dock.style.visibility = '';
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.flipY = false; // macbook GLB UVs are not Y-flipped
+    screenMat.map         = tex;
+    screenMat.emissiveMap = tex;
+    screenMat.needsUpdate = true;
+  }).catch(() => {
+    overlay.style.visibility    = prevVis;
+    overlay.style.opacity       = prevOp;
+    overlay.style.pointerEvents = prevPE;
+    titlebars.forEach(tb => (tb.style.visibility = ''));
+    if (dock) dock.style.visibility = '';
+  });
+}
+
+// Call once after page load so the screen shows the desktop immediately
+window.addEventListener('load', () => setTimeout(captureDesktopToScreen, 600));
+
+
+function decodeBase64ToArrayBuffer(base64) {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes.buffer;
+}
+
+function paintDogMesh(mesh) {
+  if (!mesh.isMesh || !mesh.geometry || !mesh.geometry.attributes?.position) return;
+  const geometry = mesh.geometry;
+  geometry.computeBoundingBox();
+  const bbox = geometry.boundingBox;
+  if (!bbox) return;
+
+  const pos = geometry.attributes.position;
+  const xSpan = Math.max(1e-5, bbox.max.x - bbox.min.x);
+  const ySpan = Math.max(1e-5, bbox.max.y - bbox.min.y);
+  const zSpan = Math.max(1e-5, bbox.max.z - bbox.min.z);
+  const colors = new Float32Array(pos.count * 3);
+  const black = new THREE.Color(0x0f131b);
+  const white = new THREE.Color(0xf0ece5);
+  const mixed = new THREE.Color();
+
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i);
+    const y = pos.getY(i);
+    const z = pos.getZ(i);
+    const nx = (x - bbox.min.x) / xSpan;
+    const ny = (y - bbox.min.y) / ySpan;
+    const nz = (z - bbox.min.z) / zSpan;
+    let t = 0;
+    if (ny < 0.24) t = 1;
+    else if (ny < 0.42) t = 1 - (ny - 0.24) / 0.18;
+
+    const centeredX = Math.abs(nx - 0.5);
+    const headBand = ny > 0.44 && ny < 0.78 && centeredX < 0.18;
+    const muzzleWhite = headBand && nz > 0.72 && nz < 0.9;
+    const noseBlack = headBand && nz >= 0.9 && centeredX < 0.075 && ny > 0.5 && ny < 0.68;
+    const behindEyesBlack = headBand && nz < 0.68;
+
+    if (muzzleWhite) t = 1;
+    if (behindEyesBlack) t = 0;
+    if (noseBlack) t = 0;
+
+    mixed.copy(black).lerp(white, Math.max(0, Math.min(1, t)));
+    colors[i * 3] = mixed.r;
+    colors[i * 3 + 1] = mixed.g;
+    colors[i * 3 + 2] = mixed.b;
+  }
+
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const sourceMat = Array.isArray(mesh.material) ? mesh.material[0] : mesh.material;
+  mesh.material = new THREE.MeshStandardMaterial({
+    name: sourceMat?.name,
+    color: 0xffffff,
+    vertexColors: true,
+    roughness: Math.max(sourceMat?.roughness ?? 0.8, 0.78),
+    metalness: Math.min(sourceMat?.metalness ?? 0.02, 0.02),
+  });
+}
+
+async function initGLTFModels() {
+  try {
+    const gltfLoader = new THREE.GLTFLoader();
+    const modelAssets = window.__MODEL_ASSETS__ || {};
+    const textureLoader = new THREE.TextureLoader();
+    const adidasFootballMap = window.__ADIDAS_BALL_TEX__
+      ? textureLoader.load(window.__ADIDAS_BALL_TEX__)
+      : null;
+    if (adidasFootballMap) {
+      adidasFootballMap.colorSpace = THREE.SRGBColorSpace;
+      adidasFootballMap.flipY = false;
+      adidasFootballMap.anisotropy = 8;
+    }
+    const totalTasks = 6;
+    let completedTasks = 0;
+    const markTaskDone = (label) => {
+      completedTasks = Math.min(totalTasks, completedTasks + 1);
+      setIntroProgress(completedTasks, totalTasks, label);
+      if (completedTasks >= totalTasks) onIntroModelsReady();
+    };
+    setIntroProgress(0, totalTasks, 'loading models');
+
+    if (modelAssets.DESK_GLB_BASE64) {
+      gltfLoader.parse(decodeBase64ToArrayBuffer(modelAssets.DESK_GLB_BASE64), '', gltf => {
+        const deskModel = gltf.scene;
+        prepModel(deskModel);
+        // Reduce glossy hotspots on drawer front in dark lighting setup.
+        deskModel.traverse(obj => {
+          if (!obj.isMesh || !obj.material) return;
+          const mats = Array.isArray(obj.material) ? obj.material : [obj.material];
+          mats.forEach(mat => {
+            if ('roughness' in mat) mat.roughness = Math.max(mat.roughness ?? 0.7, 0.92);
+            if ('metalness' in mat) mat.metalness = Math.min(mat.metalness ?? 0.08, 0.02);
+            mat.needsUpdate = true;
+          });
+        });
+        fitModelToWidth(deskModel, 2.65);
+        // Rotate 180deg from previous orientation so chair side faces camera.
+        deskModel.rotation.y = 0;
+        deskModel.position.set(0, 0, 0);
+        centerModelXZ(deskModel, 0, 0);
+        placeModelOnGround(deskModel, 0);
+        let deskBox = new THREE.Box3().setFromObject(deskModel);
+        let deskSize = deskBox.getSize(new THREE.Vector3());
+
+        // Some GLBs are exported in a different up-axis; auto-correct if the desk is unnaturally flat.
+        if (deskSize.y < 0.2 && deskSize.z > 0.8) {
+          deskModel.rotation.x = -Math.PI / 2;
+          deskModel.position.set(0, 0, 0);
+          centerModelXZ(deskModel, 0, 0);
+          placeModelOnGround(deskModel, 0);
+          deskBox = new THREE.Box3().setFromObject(deskModel);
+          deskSize = deskBox.getSize(new THREE.Vector3());
+        }
+
+        if (deskSize.y < 0.2 || deskSize.x < 1.0) {
+          console.warn('desk_set.glb loaded but appears invalid for desk replacement; keeping default desk.');
+          markTaskDone('loading models');
+          return;
+        }
+
+        deskModelAnchor.add(deskModel);
+
+        // Force matrix update so raycasting works immediately after add()
+        scene.updateMatrixWorld(true);
+
+        // Sample desk surface Y at multiple X positions and take median to avoid
+        // hitting gaps, chair back, or the lamp (which would give a wrong high value).
+        const sampleXZ = [
+          [0, -0.12], [-0.3, -0.12], [0.3, -0.12],
+          [-0.5, -0.12], [0.5, -0.12], [0, 0], [0, -0.3],
+        ];
+        const hits = sampleXZ.map(([sx, sz]) =>
+          getDeskSurfaceYAtLocalXZ(deskModelAnchor, deskGroup, sx, sz)
+        ).filter(v => v !== null && v > 0.2 && v < deskBox.max.y * 0.85);
+        hits.sort((a, b) => a - b);
+        const medianHit = hits.length ? hits[Math.floor(hits.length / 2)] : null;
+        // Fallback: 60% of total model height (typical desk surface proportion)
+        deskSurfaceY = medianHit ?? (deskBox.max.y * 0.60);
+        computerModelAnchor.position.y = deskSurfaceY + 0.048;
+        computerTarget.position.y = deskSurfaceY + 0.34;
+
+        // Auto-detect lamp bulb position: find the mesh centroid with the highest world Y
+        // that's reasonably small (not the desk surface itself)
+        let lampBulbWorld = new THREE.Vector3(0.65, 1.85, -5.0); // fallback
+        let highestMeshY = -Infinity;
+        let lampBulbMesh = null;
+        deskModel.traverse(obj => {
+          if (!obj.isMesh) return;
+          const b = new THREE.Box3().setFromObject(obj);
+          const s = b.getSize(new THREE.Vector3());
+          // Ignore very large meshes (desk surfaces) and very thin flat ones
+          if (s.x > 1.5 || s.z > 1.5) return;
+          const cWorld = b.getCenter(new THREE.Vector3());
+          deskGroup.localToWorld(cWorld); // convert local → world (already world after setFromObject on scene mesh)
+          if (cWorld.y > highestMeshY) {
+            highestMeshY = cWorld.y;
+            lampBulbWorld.copy(cWorld);
+            lampBulbMesh = obj;
+          }
+        });
+        // Replace bulb mesh material with a bright emissive one so it visually glows
+        if (lampBulbMesh) {
+          lampBulbMesh.material = new THREE.MeshStandardMaterial({
+            color: 0xffdd88,
+            emissive: new THREE.Color(0xffcc55),
+            emissiveIntensity: 4.0,
+            roughness: 0.2,
+            metalness: 0.0,
+          });
+        }
+        // Reposition lamp lights to the detected bulb location
+        deskLamp.position.copy(lampBulbWorld);
+        lampGlow.position.set(lampBulbWorld.x, 0.80, lampBulbWorld.z);
+        markTaskDone('loading models');
+      }, err => {
+        console.error('Failed to parse desk GLB (DESK_GLB_BASE64):', err);
+        markTaskDone('loading models');
+      });
+    } else {
+      markTaskDone('loading models');
+    }
+
+    if (modelAssets.MACBOOK_GLB_BASE64) {
+      gltfLoader.parse(decodeBase64ToArrayBuffer(modelAssets.MACBOOK_GLB_BASE64), '', gltf => {
+        const computerModel = gltf.scene;
+        prepModel(computerModel);
+        fitModelToHeight(computerModel, 0.36);
+        computerModel.rotation.y = 0;
+        computerModel.position.set(0, 0, 0);
+        centerModelXZ(computerModel, 0, 0);
+        placeModelOnGround(computerModel, 0);
+        computerModel.position.y += 0.005;
+        computerModel.position.z -= 0.08;
+
+        // Apply the shared screenMat to thin/flat meshes in the lid (upper) half.
+        // screenMat starts blank; captureDesktopToScreen() fills it with the actual overlay.
+        const mbBox = new THREE.Box3().setFromObject(computerModel);
+        const mbMid = (mbBox.min.y + mbBox.max.y) * 0.5;
+        screenMat = new THREE.MeshStandardMaterial({
+          color: new THREE.Color(0x000000),
+          emissive: new THREE.Color(0xffffff),
+          emissiveIntensity: 3.0,
+          roughness: 0.05,
+          metalness: 0.0,
+        });
+        computerModel.traverse(obj => {
+          if (!obj.isMesh) return;
+          const b = new THREE.Box3().setFromObject(obj);
+          const s = b.getSize(new THREE.Vector3());
+          const center = b.getCenter(new THREE.Vector3());
+          if (center.y < mbMid) return;
+          const minDim = Math.min(s.x, s.y, s.z);
+          const maxDim = Math.max(s.x, s.y);
+          if (minDim / maxDim < 0.25 && maxDim > 0.02) {
+            obj.material = screenMat;
+          }
+        });
+
+        computerModelAnchor.add(computerModel);
+        markTaskDone('loading models');
+      }, err => {
+        console.error('Failed to parse computer GLB (MACBOOK_GLB_BASE64):', err);
+        markTaskDone('loading models');
+      });
+    } else {
+      markTaskDone('loading models');
+    }
+
+    // Side table: load user's SMALL_TABLE model with the same direct parse flow as football.
+    if (modelAssets.SMALL_TABLE_GLB_BASE64) {
+      gltfLoader.parse(decodeBase64ToArrayBuffer(modelAssets.SMALL_TABLE_GLB_BASE64), '', gltf => {
+        const vinylDesk = gltf.scene;
+        fitModelToHeight(vinylDesk, 0.78);
+        vinylDesk.rotation.y = Math.PI / 2;
+        centerModelXZ(vinylDesk, 0, 0);
+        placeModelOnGround(vinylDesk, 0);
+        // Override materials — KHR_materials_pbrSpecularGlossiness may render black
+        const tableMat = new THREE.MeshStandardMaterial({ color: 0xb08060, roughness: 0.7, metalness: 0.05 });
+        vinylDesk.traverse(obj => {
+          if (obj.isMesh) {
+            obj.material = tableMat;
+            obj.castShadow = true;
+            obj.receiveShadow = true;
+          }
+        });
+        vinylDeskModelAnchor.add(vinylDesk);
+        scene.updateMatrixWorld(true);
+        const vBox = new THREE.Box3().setFromObject(vinylDesk);
+        markTaskDone('loading models');
+
+        // Detect lower shelf Y: sample raycasts downward from mid-height to find second surface
+        const vSurface = vBox.max.y;
+        const vShelfY = vBox.min.y + (vBox.max.y - vBox.min.y) * 0.38; // ~lower shelf
+
+        // Board games on the lower shelf
+        if (modelAssets.BOARD_GAME_GLB_BASE64) {
+          gltfLoader.parse(decodeBase64ToArrayBuffer(modelAssets.BOARD_GAME_GLB_BASE64), '', gltfBG => {
+            const bgModel = gltfBG.scene;
+            prepModel(bgModel);
+            fitModelToWidth(bgModel, 0.55);
+            bgModel.rotation.y = -Math.PI / 2;
+            centerModelXZ(bgModel, 0, 0);
+            placeModelOnGround(bgModel, 0);
+            const bgGroup = new THREE.Group();
+            bgGroup.position.y = vShelfY;
+            bgGroup.add(bgModel);
+            vinylDeskGroup.add(bgGroup);
+          }, err => console.error('Failed to parse board game GLB:', err));
+        }
+
+        // Place vinyl player on the desk surface
+        if (modelAssets.VINYL_GLB_BASE64) {
+          gltfLoader.parse(decodeBase64ToArrayBuffer(modelAssets.VINYL_GLB_BASE64), '', gltf2 => {
+            const vinylModel = gltf2.scene;
+            prepModel(vinylModel);
+            fitModelToWidth(vinylModel, 0.7);
+            // Keep vinyl player side-facing the camera to match the side desk orientation.
+            vinylModel.rotation.y = -Math.PI / 2;
+            centerModelXZ(vinylModel, 0, 0);
+            placeModelOnGround(vinylModel, 0);
+            vinylPlayerAnchor.position.y = vSurface + 0.01;
+            vinylPlayerAnchor.add(vinylModel);
+            markTaskDone('loading models');
+          }, err => {
+            console.error('Failed to parse vinyl GLB:', err);
+            markTaskDone('loading models');
+          });
+        } else {
+          markTaskDone('loading models');
+        }
+      }, err => {
+        console.error('Failed to parse side table GLB (SMALL_TABLE_GLB_BASE64):', err);
+        markTaskDone('loading models');
+        markTaskDone('loading models');
+      });
+    } else {
+      markTaskDone('loading models');
+      markTaskDone('loading models');
+    }
+
+    const normalizeFootballMaterial = mat => {
+      if (!mat) return;
+      if (adidasFootballMap) mat.map = adidasFootballMap;
+      if (mat.map) mat.map.colorSpace = THREE.SRGBColorSpace;
+      if (mat.emissiveMap) mat.emissiveMap.colorSpace = THREE.SRGBColorSpace;
+      if (mat.color) mat.color.set(0xffffff);
+      if (mat.map) {
+        mat.emissiveMap = mat.map;
+        if (mat.emissive) mat.emissive.setRGB(1, 1, 1);
+        if ('emissiveIntensity' in mat) mat.emissiveIntensity = 0.06;
+      }
+      if ('metalness' in mat) mat.metalness = Math.min(mat.metalness ?? 0.05, 0.08);
+      if ('roughness' in mat) mat.roughness = Math.max(mat.roughness ?? 0.6, 0.52);
+      mat.needsUpdate = true;
+    };
+
+    const attachFootballModel = footballModel => {
+      prepModel(footballModel);
+      fitModelToHeight(footballModel, 0.42);
+      // Flip the ball so the textured hemisphere appears on top instead of bottom.
+      footballModel.rotation.x = Math.PI;
+      footballModel.rotation.z = 0.18;
+      footballModel.position.set(0, 0, 0);
+      placeModelOnGround(footballModel, 0);
+      // Nudge down slightly so it visually rests on the floor instead of hovering.
+      footballModel.position.y -= 0.06;
+      footballModel.traverse(obj => {
+        if (!obj.isMesh || !obj.material) return;
+        if (Array.isArray(obj.material)) {
+          obj.material.forEach(mat => normalizeFootballMaterial(mat));
+        } else {
+          normalizeFootballMaterial(obj.material);
+        }
+        obj.castShadow = true;
+        obj.receiveShadow = false;
+      });
+      footballModelAnchor.clear();
+      footballModelAnchor.add(footballModel);
+      markTaskDone('loading models');
+    };
+
+    const loadEmbeddedFootballFallback = () => {
+      if (modelAssets.FOOTBALL_GLB_BASE64) {
+        gltfLoader.parse(decodeBase64ToArrayBuffer(modelAssets.FOOTBALL_GLB_BASE64), '', gltf => {
+          attachFootballModel(gltf.scene);
+        }, parseErr => {
+          console.error('Failed to parse embedded football GLB:', parseErr);
+          markTaskDone('loading models');
+        });
+      } else {
+        markTaskDone('loading models');
+      }
+    };
+
+    // Use embedded football data first (same parse flow as other models like vinyl/table),
+    // then fall back to direct URL loading if embedded data is unavailable.
+    if (modelAssets.FOOTBALL_GLB_BASE64) {
+      loadEmbeddedFootballFallback();
+    } else {
+      gltfLoader.load('./adidas_soccer_ball.glb', gltf => {
+        attachFootballModel(gltf.scene);
+      }, undefined, err => {
+        console.error('Failed to load adidas_soccer_ball.glb, falling back to embedded football:', err);
+        loadEmbeddedFootballFallback();
+      });
+    }
+
+    const attachDogModel = gltf => {
+        const dogModel = gltf.scene;
+        prepModel(dogModel);
+        dogModel.traverse(obj => {
+          if (!obj.isMesh) return;
+          paintDogMesh(obj);
+        });
+        dogModel.scale.setScalar(0.92);
+        dogModel.rotation.y = 0.48;
+        dogModel.position.set(0.04, 0, 0.04);
+        dogModelAnchor.clear();
+        dogModelAnchor.add(dogModel);
+
+        if (dogMixer) {
+          const idx = animationMixers.indexOf(dogMixer);
+          if (idx >= 0) animationMixers.splice(idx, 1);
+        }
+        dogMixer = gltf.animations && gltf.animations.length ? new THREE.AnimationMixer(dogModel) : null;
+        if (dogMixer) animationMixers.push(dogMixer);
+        dogAnimationActions = {};
+        (gltf.animations || []).forEach(clip => {
+          if (dogMixer) dogAnimationActions[clip.name] = dogMixer.clipAction(clip);
+        });
+        if (dogAnimationActions['standing_skeletal.3']) {
+          playDogAnimation('standing_skeletal.3');
+        }
+        if (dogAnimationActions['shake_skeletal.3']) {
+          dogAnimationActions['shake_skeletal.3'].getMixer().addEventListener('finished', () => {
+            if (dogActiveAction === dogAnimationActions['shake_skeletal.3'] && dogAnimationActions['standing_skeletal.3']) {
+              playDogAnimation('standing_skeletal.3');
+            }
+          });
+        }
+        markTaskDone('loading models');
+    };
+
+    if (modelAssets.DOG_GLB_BASE64) {
+      gltfLoader.parse(decodeBase64ToArrayBuffer(modelAssets.DOG_GLB_BASE64), '', gltf => {
+        attachDogModel(gltf);
+      }, parseErr => {
+        console.error('Failed to parse embedded dog GLB:', parseErr);
+        markTaskDone('loading models');
+      });
+    } else {
+      markTaskDone('loading models');
+    }
+  } catch (err) {
+    console.error('Failed to initialize GLTFLoader:', err);
+    onIntroModelsReady();
+  }
+}
+initGLTFModels();
+
+// ═══════════════════════════════════════════════════════
+//  MONITOR CANVAS TEXTURE
+// ═══════════════════════════════════════════════════════
+function createMonitorTexture() {
+  const c = document.createElement('canvas');
+  c.width = 960; c.height = 540;
+  const ctx = c.getContext('2d');
+  ctx.fillStyle = '#0f1117';
+  ctx.fillRect(0, 0, 960, 540);
+
+  ctx.fillStyle = 'rgba(19,20,26,0.96)';
+  ctx.fillRect(0, 0, 960, 34);
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+  ctx.beginPath();
+  ctx.moveTo(0, 34.5);
+  ctx.lineTo(960, 34.5);
+  ctx.stroke();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.94)';
+  ctx.font = 'bold 15px sans-serif';
+  ctx.fillText('', 26, 22);
+  ctx.fillText('Finder', 66, 22);
+  ctx.font = '15px sans-serif';
+  ['File', 'Edit', 'View', 'Window'].forEach((item, i) => ctx.fillText(item, 130 + i * 68, 22));
+  ctx.font = '14px sans-serif';
+  ctx.fillText('87%', 855, 22);
+  ctx.fillText('1:37 AM', 900, 22);
+
+  ctx.fillStyle = '#323233';
+  ctx.fillRect(0, 34, 960, 34);
+  ctx.fillStyle = '#ff5f57'; ctx.beginPath(); ctx.arc(156, 75, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#febc2e'; ctx.beginPath(); ctx.arc(174, 75, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = '#28c840'; ctx.beginPath(); ctx.arc(192, 75, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.fillStyle = 'rgba(255,255,255,0.55)';
+  ctx.font = '13px sans-serif';
+  ctx.fillText('train_dpo.py - Visual Studio Code', 382, 79);
+
+  ctx.fillStyle = '#252526';
+  ctx.fillRect(0, 68, 188, 472);
+  ctx.fillStyle = 'rgba(255,255,255,0.36)';
+  ctx.font = '11px sans-serif';
+  ctx.fillText('Explorer', 18, 96);
+
+  const files = [
+    'llm-posttraining',
+    'train_dpo.py',
+    'reward_model.py',
+    'data_utils.py',
+    'configs.yaml',
+    'README.md'
+  ];
+  files.forEach((file, i) => {
+    const y = 126 + i * 36;
+    if (file === 'train_dpo.py') {
+      ctx.fillStyle = 'rgba(255,255,255,0.10)';
+      ctx.fillRect(8, y - 16, 172, 24);
+    }
+    ctx.fillStyle = file === 'train_dpo.py' ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.58)';
+    ctx.font = '12px monospace';
+    ctx.fillText(file, 24, y);
+  });
+
+  ctx.fillStyle = '#1e1e1e';
+  ctx.fillRect(188, 68, 772, 472);
+  ctx.fillStyle = '#252526';
+  ctx.fillRect(188, 68, 772, 30);
+  ctx.fillStyle = 'rgba(255,255,255,0.86)';
+  ctx.font = '12px sans-serif';
+  ctx.fillText('train_dpo.py', 212, 88);
+
+  const codeLines = [
+    ['def', '#569cd6', ' train_step(batch):', '#dcdcaa'],
+    ['    policy_loss', '#9cdcfe', ' = dpo_loss(chosen, rejected)', '#d4d4d4'],
+    ['    reward', '#9cdcfe', ' = reward_model(score_inputs)', '#d4d4d4'],
+    ['    return', '#569cd6', ' policy_loss + 0.2 * reward.mean()', '#d4d4d4']
+  ];
+  codeLines.forEach((line, i) => {
+    const y = 132 + i * 38;
+    ctx.fillStyle = 'rgba(255,255,255,0.24)';
+    ctx.font = '12px monospace';
+    ctx.fillText(String(i + 24), 210, y);
+    ctx.fillStyle = line[1];
+    ctx.fillText(line[0], 246, y);
+    ctx.fillStyle = line[3];
+    ctx.fillText(line[2], 286, y);
+  });
+
+  ctx.fillStyle = '#0d0d0d';
+  ctx.fillRect(188, 448, 772, 92);
+  ctx.fillStyle = '#0dbc79';
+  ctx.font = '12px monospace';
+  ctx.fillText('$ python train_dpo.py --epochs 3', 212, 484);
+  ctx.fillStyle = '#9ad1ff';
+  ctx.fillText('loss: 0.182  reward: 1.37', 212, 510);
+
+  const tex = new THREE.CanvasTexture(c);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  return tex;
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.lineTo(x + w - r, y);
+  ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+  ctx.lineTo(x + w, y + h - r);
+  ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+  ctx.lineTo(x + r, y + h);
+  ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+  ctx.lineTo(x, y + r);
+  ctx.quadraticCurveTo(x, y, x + r, y);
+  ctx.closePath();
+}
+
+// ═══════════════════════════════════════════════════════
+//  CLICKABLES
+// ═══════════════════════════════════════════════════════
+const clickables = [deskClickTarget, computerTarget, soccerTarget, dogTarget, smallTableTarget, vinylTarget, boardGameTarget];
+
+// ═══════════════════════════════════════════════════════
+//  CAMERA ANIMATION
+// ═══════════════════════════════════════════════════════
+const camState = { current: 'room', animating: false };
+const camViews = {
+  room:       { pos: new THREE.Vector3(0, 1.75, 4),   look: new THREE.Vector3(0, 1.2, 0) },
+  desk:       { pos: new THREE.Vector3(0.45, 2.3, -1.2), look: new THREE.Vector3(0.2, 0.9, -3) },
+  computer:   { pos: new THREE.Vector3(0, 2, -0.5),  look: new THREE.Vector3(0, 1.72, -3.0) },
+  soccer:     { pos: new THREE.Vector3(0.5, 1.0, -0.5), look: new THREE.Vector3(-1.4, 0.2, -1.75) },
+  dog:        { pos: new THREE.Vector3(-1.0, 0.9, 0.8),  look: new THREE.Vector3(-2.2, 0.4, -1.2) },
+  // Closer, slightly top-down, from desk-side direction.
+  smalltable: { pos: new THREE.Vector3(1.62, 1.3, -1.02), look: new THREE.Vector3(2.38, 0.6, -2.02) },
+  vinyl:      { pos: new THREE.Vector3(1.86, 1.2, -1.32), look: new THREE.Vector3(2.38, 0.62, -2.02) },
+  boardgame:  { pos: new THREE.Vector3(2.06, 1.08, -1.34), look: new THREE.Vector3(2.38, 0.42, -2.06) },
+};
+let camFrom = { pos: camera.position.clone(), look: new THREE.Vector3(0, 1.2, 0) };
+let camTo   = { pos: camera.position.clone(), look: new THREE.Vector3(0, 1.2, 0) };
+let camLook = new THREE.Vector3(0, 1.2, 0);
+let camT = 1.0;
+function easeInOut(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+function moveCameraTo(viewName, onDone, opts = {}) {
+  const v = camViews[viewName];
+  const keepLook = !!opts.keepLook;
+  const lookOverride = opts.lookOverride || null;
+  camFrom.pos.copy(camera.position); camFrom.look.copy(camLook);
+  camTo.pos.copy(v.pos);
+  if (lookOverride) {
+    camTo.look.copy(lookOverride);
+  } else if (keepLook) {
+    camTo.look.copy(camLook);
+  } else {
+    camTo.look.copy(v.look);
+  }
+  camT = 0; camState.animating = true;
+  camState.pendingDone = onDone;
+}
+
+// ═══════════════════════════════════════════════════════
+//  RAYCASTING
+// ═══════════════════════════════════════════════════════
+const raycaster = new THREE.Raycaster();
+const mouse2D = new THREE.Vector2();
+const hoverLabel = document.getElementById('hover-label');
+let hoveredType = null;
+let hasEnteredRoom = false;
+function getInteractiveType(hitType) {
+  if (camState.current === 'room') {
+    if (hitType === 'desk' || hitType === 'computer') return 'desk';
+    if (hitType === 'vinyl' || hitType === 'boardgame' || hitType === 'smalltable') return 'smalltable';
+    return hitType;
+  }
+  if (camState.current === 'desk') {
+    return hitType === 'computer' ? 'computer' : null;
+  }
+  if (camState.current === 'smalltable') {
+    if (hitType === 'vinyl') return 'vinyl';
+    if (hitType === 'boardgame') return 'boardgame';
+    return null;
+  }
+  return null;
+}
+function getInteractiveLabel(type) {
+  if (type === 'desk') return 'desk';
+  if (type === 'computer') return 'computer';
+  if (type === 'soccer') return 'soccer';
+  if (type === 'dog') return 'dog';
+  if (type === 'smalltable') return 'small table';
+  if (type === 'vinyl') return 'vinyl player';
+  if (type === 'boardgame') return 'board games';
+  return null;
+}
+function getRayHit(e) {
+  mouse2D.x = (e.clientX/innerWidth)*2-1;
+  mouse2D.y = -(e.clientY/innerHeight)*2+1;
+  raycaster.setFromCamera(mouse2D, camera);
+  return raycaster.intersectObjects(clickables, false);
+}
+function getHitType(hits) {
+  for (const hit of hits) {
+    const type = getInteractiveType(hit.object.userData.type);
+    if (type) return type;
+  }
+  return null;
+}
+document.addEventListener('mousemove', e => {
+  if (!hasEnteredRoom || intro.style.display !== 'none') return;
+  if (camState.animating || (camState.current !== 'room' && camState.current !== 'desk' && camState.current !== 'smalltable')) return;
+  const hits = getRayHit(e);
+  const type = getHitType(hits);
+  const lbl = type ? getInteractiveLabel(type) : null;
+  if (lbl) {
+    if (hoveredType !== lbl) {
+      hoveredType = lbl;
+      hoverLabel.textContent = '[ ' + lbl + ' ]';
+      hoverLabel.classList.add('visible');
+      document.body.style.cursor = 'pointer';
+    }
+  } else if (hoveredType !== null) {
+    hoveredType = null; hoverLabel.classList.remove('visible');
+    document.body.style.cursor = 'default';
+  }
+});
+document.addEventListener('click', e => {
+  if (!hasEnteredRoom || intro.style.display !== 'none') return;
+  if (camState.animating || (camState.current !== 'room' && camState.current !== 'desk' && camState.current !== 'smalltable')) return;
+  const hits = getRayHit(e);
+  const type = getHitType(hits);
+  if (!type) return;
+  zoomTo(type);
+});
+
+// ═══════════════════════════════════════════════════════
+//  OVERLAYS & NAVIGATION
+// ═══════════════════════════════════════════════════════
+const overlayMap = { computer:'computer-overlay', soccer:'soccer-overlay', dog:'dog-overlay', vinyl:'vinyl-overlay', boardgame:'boardgame-overlay' };
+function zoomTo(type) {
+  if (camState.animating) return;
+  document.getElementById('hint').classList.add('hidden');
+  hoverLabel.classList.remove('visible'); hoveredType = null;
+  document.body.style.cursor = 'default';
+  const fromSmallTable = camState.current === 'smalltable';
+  const keepLook = fromSmallTable && type === 'vinyl';
+  let lookOverride = null;
+  if (fromSmallTable && type === 'boardgame') {
+    // Slight downward rotation for lower-shelf focus, not a full re-orient.
+    lookOverride = camLook.clone().lerp(camViews.boardgame.look, 0.35);
+  }
+  moveCameraTo(type, () => {
+    const ov = overlayMap[type];
+    if (ov) document.getElementById(ov).classList.add('visible');
+    document.getElementById('back-btn').style.display = 'block';
+    camState.current = type;
+  }, { keepLook, lookOverride });
+}
+function goBack() {
+  if (camState.animating) return;
+  Object.values(overlayMap).forEach(id => document.getElementById(id).classList.remove('visible'));
+  if (camState.current === 'computer') {
+    moveCameraTo('desk', () => {
+      camState.current = 'desk';
+      document.getElementById('back-btn').style.display = 'block';
+    });
+    return;
+  }
+  if (camState.current === 'vinyl' || camState.current === 'boardgame') {
+    moveCameraTo('smalltable', () => {
+      camState.current = 'smalltable';
+      document.getElementById('back-btn').style.display = 'block';
+    });
+    return;
+  }
+  document.getElementById('back-btn').style.display = 'none';
+  moveCameraTo('room', () => {
+    camState.current = 'room';
+    document.getElementById('hint').classList.remove('hidden');
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  VINYL PLAYER
+// ═══════════════════════════════════════════════════════
+let vinylAudio = new Audio('Harry Styles - Sign of the Times (Audio).mp3');
+vinylAudio.loop = true;
+let vinylPlaying = false;
+function toggleVinyl() {
+  const disc = document.getElementById('vinyl-disc');
+  const btn = document.getElementById('vinyl-play-btn');
+  if (vinylPlaying) {
+    vinylAudio.pause();
+    disc.classList.remove('spinning');
+    btn.textContent = '▶ play';
+    vinylPlaying = false;
+  } else {
+    vinylAudio.play();
+    disc.classList.add('spinning');
+    btn.textContent = '⏸ pause';
+    vinylPlaying = true;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  macOS APP FUNCTIONS
+// ═══════════════════════════════════════════════════════
+const macApps = { finder: false, vscode: false, chrome: true, outlook: false };
+const CHROME_HOME_URL = 'https://cacayaya.github.io/';
+const CHROME_HOME_EMBED_SRC = '../';
+const CHROME_EMBED_HOST_ALLOWLIST = new Set(['cacayaya.github.io', 'www.purdue.edu', 'purdue.edu']);
+const macAppNames = {
+  finder: 'Finder',
+  vscode: 'Visual Studio Code',
+  chrome: 'Google Chrome',
+  outlook: 'Outlook',
+};
+const macAppOrder = ['chrome', 'vscode', 'outlook', 'finder'];
+const macWindowIds = {
+  finder: 'mac-finder',
+  vscode: 'mac-vscode',
+  chrome: 'mac-chrome',
+  outlook: 'mac-outlook',
+};
+
+function renderMacApps() {
+  Object.keys(macWindowIds).forEach(app => {
+    const el = document.getElementById(macWindowIds[app]);
+    if (el) el.style.display = macApps[app] ? 'flex' : 'none';
+    const dot = document.getElementById('dot-' + app);
+    if (dot) dot.classList.toggle('on', !!macApps[app]);
+  });
+  const active = macAppOrder.find(a => macApps[a]);
+  document.getElementById('mb-appname').textContent = active ? macAppNames[active] : 'Finder';
+}
+
+function macOpen(app) {
+  Object.keys(macApps).forEach(k => macApps[k] = false);
+  if (macApps.hasOwnProperty(app)) macApps[app] = true;
+  if (app === 'chrome' && !chromeTabs.home.open && !chromeTabs.netflix.open) {
+    chromeTabs.home.open = true;
+    chromeTabs.netflix.open = true;
+    chromeTabs.home.url = CHROME_HOME_URL;
+    chromeTabs.home.embedSrc = CHROME_HOME_EMBED_SRC;
+    activeChromeTab = 'home';
+  }
+  renderMacApps();
+  if (app === 'chrome') renderChromeTabs();
+}
+
+function macClose(app) {
+  if (!macApps.hasOwnProperty(app)) return;
+  macApps[app] = false;
+  renderMacApps();
+}
+
+function macMaximize(app) {
+  // just a visual noop — window already fills the desktop
+}
+renderMacApps();
+
+const chromeTabs = {
+  home: { open: true, url: CHROME_HOME_URL, embedSrc: CHROME_HOME_EMBED_SRC, history: [CHROME_HOME_URL], historyIndex: 0 },
+  netflix: { open: true },
+};
+let activeChromeTab = 'home';
+
+function canEmbedInChrome(url) {
+  try {
+    const hostname = new URL(url).hostname;
+    return CHROME_EMBED_HOST_ALLOWLIST.has(hostname);
+  } catch {
+    return false;
+  }
+}
+
+function setChromeHomeUrl(url, { pushHistory = true } = {}) {
+  const nextUrl = url || CHROME_HOME_URL;
+  if (pushHistory) {
+    const nextHistory = chromeTabs.home.history.slice(0, chromeTabs.home.historyIndex + 1);
+    nextHistory.push(nextUrl);
+    chromeTabs.home.history = nextHistory;
+    chromeTabs.home.historyIndex = nextHistory.length - 1;
+  }
+  chromeTabs.home.url = nextUrl;
+  chromeTabs.home.embedSrc = nextUrl;
+  activeChromeTab = 'home';
+  renderChromeTabs();
+}
+
+function wireHomepageFrameLinks() {
+  const frame = document.getElementById('chrome-home-frame');
+  if (!frame) return;
+  let doc;
+  try {
+    doc = frame.contentDocument || frame.contentWindow?.document;
+  } catch {
+    return;
+  }
+  if (!doc) return;
+  if (doc.__roomLinkInterceptorAttached) return;
+  doc.__roomLinkInterceptorAttached = true;
+  doc.addEventListener('click', event => {
+    const anchor = event.target && event.target.closest ? event.target.closest('a[href]') : null;
+    if (!anchor) return;
+    const href = anchor.href;
+    if (!href) return;
+    if (href.startsWith('mailto:')) return;
+    event.preventDefault();
+    event.stopPropagation();
+    if (canEmbedInChrome(href)) {
+      setChromeHomeUrl(href);
+    } else {
+      openExternalUrl(href);
+    }
+  }, true);
+}
+
+function chromeGoBack() {
+  if (activeChromeTab !== 'home') return;
+  if (chromeTabs.home.historyIndex <= 0) {
+    chromeTabs.home.history = [CHROME_HOME_URL];
+    chromeTabs.home.historyIndex = 0;
+    chromeTabs.home.url = CHROME_HOME_URL;
+    chromeTabs.home.embedSrc = CHROME_HOME_EMBED_SRC;
+    const frame = document.getElementById('chrome-home-frame');
+    if (frame) frame.src = CHROME_HOME_EMBED_SRC;
+    renderChromeTabs();
+    return;
+  }
+  chromeTabs.home.historyIndex -= 1;
+  const prevUrl = chromeTabs.home.history[chromeTabs.home.historyIndex];
+  chromeTabs.home.url = prevUrl;
+  chromeTabs.home.embedSrc = prevUrl;
+  const frame = document.getElementById('chrome-home-frame');
+  if (frame) frame.src = prevUrl;
+  renderChromeTabs();
+}
+
+function chromeGoForward() {
+  if (activeChromeTab !== 'home') return;
+  if (chromeTabs.home.historyIndex >= chromeTabs.home.history.length - 1) return;
+  chromeTabs.home.historyIndex += 1;
+  const nextUrl = chromeTabs.home.history[chromeTabs.home.historyIndex];
+  chromeTabs.home.url = nextUrl;
+  chromeTabs.home.embedSrc = nextUrl;
+  renderChromeTabs();
+}
+
+function chromeRefresh() {
+  if (activeChromeTab !== 'home') return;
+  renderChromeTabs();
+}
+
+function renderChromeTabs() {
+  const tabHome = document.getElementById('chrome-tab-home');
+  const tabNetflix = document.getElementById('chrome-tab-netflix');
+  const pageHome = document.getElementById('chrome-page-home');
+  const pageNetflix = document.getElementById('chrome-page-netflix');
+  const pageEmpty = document.getElementById('chrome-page-empty');
+  const frame = document.getElementById('chrome-home-frame');
+  const urlText = document.getElementById('chrome-url-text');
+  const backBtn = document.getElementById('chrome-back-btn');
+  const forwardBtn = document.getElementById('chrome-forward-btn');
+  if (!tabHome || !tabNetflix || !pageHome || !pageNetflix || !pageEmpty || !urlText || !frame) return;
+
+  tabHome.style.display = chromeTabs.home.open ? 'flex' : 'none';
+  tabNetflix.style.display = chromeTabs.netflix.open ? 'flex' : 'none';
+
+  if (!chromeTabs[activeChromeTab]?.open) {
+    activeChromeTab = chromeTabs.home.open ? 'home' : (chromeTabs.netflix.open ? 'netflix' : null);
+  }
+  if (!activeChromeTab) {
+    pageHome.classList.remove('active');
+    pageNetflix.classList.remove('active');
+    pageEmpty.classList.add('active');
+    urlText.textContent = '';
+    return;
+  }
+
+  const isHome = activeChromeTab === 'home';
+  pageEmpty.classList.remove('active');
+  tabHome.classList.toggle('inactive', !isHome);
+  tabNetflix.classList.toggle('inactive', isHome);
+  pageHome.classList.toggle('active', isHome);
+  pageNetflix.classList.toggle('active', !isHome);
+  if (isHome) {
+    const embedSrc = chromeTabs.home.embedSrc || chromeTabs.home.url;
+    frame.src = embedSrc;
+  }
+  urlText.textContent = isHome
+    ? chromeTabs.home.url.replace(/^https?:\/\//, '')
+    : 'netflix.com/watch/one-hundred-years-of-solitude';
+  if (backBtn) backBtn.style.opacity = isHome && chromeTabs.home.historyIndex > 0 ? '1' : '0.45';
+  if (forwardBtn) forwardBtn.style.opacity = isHome && chromeTabs.home.historyIndex < chromeTabs.home.history.length - 1 ? '1' : '0.45';
+}
+
+function switchChromeTab(tab) {
+  if (!chromeTabs[tab] || !chromeTabs[tab].open) return;
+  activeChromeTab = tab;
+  renderChromeTabs();
+}
+
+function closeChromeTab(tab) {
+  if (!chromeTabs[tab] || !chromeTabs[tab].open) return;
+  chromeTabs[tab].open = false;
+  if (!chromeTabs.home.open && !chromeTabs.netflix.open) activeChromeTab = null;
+  if (activeChromeTab === tab) {
+    activeChromeTab = chromeTabs.home.open ? 'home' : 'netflix';
+  }
+  renderChromeTabs();
+}
+
+function openChromeUrl(url) {
+  const nextUrl = url || CHROME_HOME_URL;
+  chromeTabs.home.open = true;
+  if (!macApps.chrome) {
+    Object.keys(macApps).forEach(k => macApps[k] = false);
+    macApps.chrome = true;
+    renderMacApps();
+  }
+  if (canEmbedInChrome(nextUrl)) {
+    setChromeHomeUrl(nextUrl);
+  } else {
+    openExternalUrl(nextUrl);
+  }
+}
+
+function reopenChromeTab(tab) {
+  if (!chromeTabs[tab]) return;
+  chromeTabs[tab].open = true;
+  if (tab === 'home') {
+    chromeTabs.home.history = [CHROME_HOME_URL];
+    chromeTabs.home.historyIndex = 0;
+    chromeTabs.home.url = CHROME_HOME_URL;
+    chromeTabs.home.embedSrc = CHROME_HOME_EMBED_SRC;
+  }
+  activeChromeTab = tab;
+  renderChromeTabs();
+}
+
+function openExternalUrl(url) {
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+document.getElementById('chrome-home-frame')?.addEventListener('load', wireHomepageFrameLinks);
+renderChromeTabs();
+
+// Dog shake hands
+const shakeResponses = [
+  'Hacker says hi! 🐾',
+  '*tail wagging intensifies*',
+  'Good handshake. Treat earned? 👀',
+  'Hacker.shake() → returns True',
+  '*stares at your pocket for treats*',
+];
+let shakeCount = 0;
+function shakeHands() {
+  document.getElementById('shake-response').textContent = shakeResponses[shakeCount++ % shakeResponses.length];
+  if (dogAnimationActions['shake_skeletal.3']) {
+    playDogAnimation('shake_skeletal.3', { loop: THREE.LoopOnce, clampWhenFinished: true, fade: 0.16 });
+  }
+}
+
+function computeAgeYearsMonths(birthDate, now = new Date()) {
+  let years = now.getFullYear() - birthDate.getFullYear();
+  let months = now.getMonth() - birthDate.getMonth();
+
+  // If we have not reached the birth day-of-month yet, current month is incomplete.
+  if (now.getDate() < birthDate.getDate()) {
+    months -= 1;
+  }
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
+
+  if (years < 0) return { years: 0, months: 0 };
+  return { years, months };
+}
+
+function updateDogAge() {
+  const ageEl = document.getElementById('dog-age');
+  if (!ageEl) return;
+  const birthDate = new Date(2024, 10, 16); // 2024-11-16 (month is 0-based)
+  const { years, months } = computeAgeYearsMonths(birthDate, new Date());
+  const y = years === 1 ? 'year' : 'years';
+  const m = months === 1 ? 'month' : 'months';
+  ageEl.textContent = `${years} ${y} ${months} ${m}`;
+}
+updateDogAge();
+
+// ═══════════════════════════════════════════════════════
+//  VSCode CONTENT
+// ═══════════════════════════════════════════════════════
+document.getElementById('code-area').innerHTML = `
+<div class="cl"><span class="ln">1</span><span class="ct"><span class="cmt"># DPO Training — LLM Post-Training Pipeline</span></span></div>
+<div class="cl"><span class="ln">2</span><span class="ct"></span></div>
+<div class="cl"><span class="ln">3</span><span class="ct"><span class="kw">import </span><span class="op">torch, torch.nn as nn</span></span></div>
+<div class="cl"><span class="ln">4</span><span class="ct"><span class="kw">from </span><span class="op">transformers </span><span class="kw">import </span><span class="cls">AutoModelForCausalLM</span><span class="op">, </span><span class="cls">AutoTokenizer</span></span></div>
+<div class="cl"><span class="ln">5</span><span class="ct"><span class="kw">from </span><span class="op">dataclasses </span><span class="kw">import </span><span class="op">dataclass</span></span></div>
+<div class="cl"><span class="ln">6</span><span class="ct"><span class="kw">from </span><span class="op">typing </span><span class="kw">import </span><span class="cls">Optional</span></span></div>
+<div class="cl"><span class="ln">7</span><span class="ct"></span></div>
+<div class="cl"><span class="ln">8</span><span class="ct"><span class="cmt">@dataclass</span></span></div>
+<div class="cl"><span class="ln">9</span><span class="ct"><span class="kw">class </span><span class="cls">DPOConfig</span><span class="op">:</span></span></div>
+<div class="cl"><span class="ln">10</span><span class="ct">    <span class="var">model_name</span><span class="op">: </span><span class="cls">str</span><span class="op"> = </span><span class="str">"meta-llama/Llama-3.1-8B"</span></span></div>
+<div class="cl"><span class="ln">11</span><span class="ct">    <span class="var">learning_rate</span><span class="op">: </span><span class="cls">float</span><span class="op"> = </span><span class="num">5e-7</span></span></div>
+<div class="cl"><span class="ln">12</span><span class="ct">    <span class="var">beta</span><span class="op">: </span><span class="cls">float</span><span class="op"> = </span><span class="num">0.1</span>    <span class="cmt"># KL penalty</span></span></div>
+<div class="cl"><span class="ln">13</span><span class="ct">    <span class="var">batch_size</span><span class="op">: </span><span class="cls">int</span><span class="op"> = </span><span class="num">4</span></span></div>
+<div class="cl"><span class="ln">14</span><span class="ct">    <span class="var">max_length</span><span class="op">: </span><span class="cls">int</span><span class="op"> = </span><span class="num">2048</span></span></div>
+<div class="cl"><span class="ln">15</span><span class="ct">    <span class="var">num_epochs</span><span class="op">: </span><span class="cls">int</span><span class="op"> = </span><span class="num">3</span></span></div>
+<div class="cl"><span class="ln">16</span><span class="ct"></span></div>
+<div class="cl"><span class="ln">17</span><span class="ct"><span class="kw">def </span><span class="fn">compute_log_probs</span><span class="op">(</span></span></div>
+<div class="cl"><span class="ln">18</span><span class="ct">    <span class="var">model</span><span class="op">: </span><span class="cls">nn.Module</span><span class="op">, </span><span class="var">input_ids</span><span class="op">: </span><span class="cls">torch.Tensor</span><span class="op">,</span></span></div>
+<div class="cl"><span class="ln">19</span><span class="ct">    <span class="var">attention_mask</span><span class="op">: </span><span class="cls">torch.Tensor</span><span class="op">, </span><span class="var">labels</span><span class="op">: </span><span class="cls">torch.Tensor</span><span class="op">,</span></span></div>
+<div class="cl"><span class="ln">20</span><span class="ct"><span class="op">) -> </span><span class="cls">torch.Tensor</span><span class="op">:</span></span></div>
+<div class="cl"><span class="ln">21</span><span class="ct">    <span class="cmt">"""Compute per-token log probabilities."""</span></span></div>
+<div class="cl"><span class="ln">22</span><span class="ct">    <span class="var">logits</span><span class="op"> = </span><span class="fn">model</span><span class="op">(</span><span class="var">input_ids</span><span class="op">=</span><span class="var">input_ids</span><span class="op">, </span><span class="var">attention_mask</span><span class="op">=</span><span class="var">attention_mask</span><span class="op">).logits</span></span></div>
+<div class="cl"><span class="ln">23</span><span class="ct">    <span class="var">log_probs</span><span class="op"> = </span><span class="cls">nn.functional</span><span class="op">.</span><span class="fn">log_softmax</span><span class="op">(</span><span class="var">logits</span><span class="op">[:, :-1], dim=-1)</span></span></div>
+<div class="cl"><span class="ln">24</span><span class="ct">    <span class="kw">return </span><span class="op">(</span><span class="fn">torch.gather</span><span class="op">(</span><span class="var">log_probs</span><span class="op">, </span><span class="num">2</span><span class="op">, </span><span class="var">labels</span><span class="op">[:,1:,</span><span class="cls">None</span><span class="op">]).squeeze(</span><span class="num">2</span><span class="op">) * </span><span class="var">attention_mask</span><span class="op">[:,1:]).sum(-1)</span></span></div>
+<div class="cl"><span class="ln">25</span><span class="ct"></span></div>
+<div class="cl"><span class="ln">26</span><span class="ct"><span class="kw">def </span><span class="fn">dpo_loss</span><span class="op">(</span></span></div>
+<div class="cl"><span class="ln">27</span><span class="ct">    <span class="var">policy_chosen_logps</span><span class="op">,   </span><span class="var">policy_rejected_logps</span><span class="op">,</span></span></div>
+<div class="cl"><span class="ln">28</span><span class="ct">    <span class="var">reference_chosen_logps</span><span class="op">, </span><span class="var">reference_rejected_logps</span><span class="op">,</span></span></div>
+<div class="cl"><span class="ln">29</span><span class="ct">    <span class="var">beta</span><span class="op">: </span><span class="cls">float</span><span class="op"> = </span><span class="num">0.1</span></span></div>
+<div class="cl"><span class="ln">30</span><span class="ct"><span class="op">) -> </span><span class="cls">torch.Tensor</span><span class="op">:</span></span></div>
+<div class="cl"><span class="ln">31</span><span class="ct">    <span class="cmt">"""Direct Preference Optimization loss."""</span></span></div>
+<div class="cl"><span class="ln">32</span><span class="ct">    <span class="var">chosen_rewards</span>   <span class="op">= </span><span class="var">beta</span><span class="op"> * (</span><span class="var">policy_chosen_logps</span>   <span class="op">- </span><span class="var">reference_chosen_logps</span><span class="op">)</span></span></div>
+<div class="cl"><span class="ln">33</span><span class="ct">    <span class="var">rejected_rewards</span> <span class="op">= </span><span class="var">beta</span><span class="op"> * (</span><span class="var">policy_rejected_logps</span> <span class="op">- </span><span class="var">reference_rejected_logps</span><span class="op">)</span></span></div>
+<div class="cl"><span class="ln">34</span><span class="ct">    <span class="var">loss</span><span class="op"> = -</span><span class="cls">nn.functional</span><span class="op">.</span><span class="fn">logsigmoid</span><span class="op">(</span><span class="var">chosen_rewards</span><span class="op"> - </span><span class="var">rejected_rewards</span><span class="op">).mean()</span></span></div>
+<div class="cl"><span class="ln">35</span><span class="ct">    <span class="kw">return </span><span class="var">loss</span><span class="op">, </span><span class="var">chosen_rewards</span><span class="op">.mean(), </span><span class="var">rejected_rewards</span><span class="op">.mean()</span></span></div>
+<div class="cl"><span class="ln">36</span><span class="ct"></span></div>
+<div class="cl"><span class="ln">37</span><span class="ct"><span class="kw">def </span><span class="fn">train_epoch</span><span class="op">(</span><span class="var">model</span><span class="op">, </span><span class="var">ref_model</span><span class="op">, </span><span class="var">optimizer</span><span class="op">, </span><span class="var">dataloader</span><span class="op">, </span><span class="var">config</span><span class="op">):</span></span></div>
+<div class="cl"><span class="ln">38</span><span class="ct">    <span class="var">model</span><span class="op">.</span><span class="fn">train</span><span class="op">()</span></span></div>
+<div class="cl"><span class="ln">39</span><span class="ct">    <span class="kw">for </span><span class="var">step</span><span class="op">, </span><span class="var">batch</span><span class="op"> in </span><span class="fn">enumerate</span><span class="op">(</span><span class="var">dataloader</span><span class="op">):</span></span></div>
+<div class="cl"><span class="ln">40</span><span class="ct">        <span class="kw">with </span><span class="op">torch.no_grad():</span></span></div>
+<div class="cl"><span class="ln">41</span><span class="ct">            <span class="var">ref_c</span><span class="op"> = </span><span class="fn">compute_log_probs</span><span class="op">(</span><span class="var">ref_model</span><span class="op">, **</span><span class="var">batch</span><span class="op">[</span><span class="str">'chosen'</span><span class="op">])</span></span></div>
+<div class="cl"><span class="ln">42</span><span class="ct">            <span class="var">ref_r</span><span class="op"> = </span><span class="fn">compute_log_probs</span><span class="op">(</span><span class="var">ref_model</span><span class="op">, **</span><span class="var">batch</span><span class="op">[</span><span class="str">'rejected'</span><span class="op">])</span></span></div>
+<div class="cl"><span class="ln">43</span><span class="ct">        <span class="var">loss</span><span class="op">, _, _ = </span><span class="fn">dpo_loss</span><span class="op">(</span><span class="fn">compute_log_probs</span><span class="op">(</span><span class="var">model</span><span class="op">, **</span><span class="var">batch</span><span class="op">[</span><span class="str">'chosen'</span><span class="op">]),</span></span></div>
+<div class="cl"><span class="ln">44</span><span class="ct">            <span class="fn">compute_log_probs</span><span class="op">(</span><span class="var">model</span><span class="op">, **</span><span class="var">batch</span><span class="op">[</span><span class="str">'rejected'</span><span class="op">]), </span><span class="var">ref_c</span><span class="op">, </span><span class="var">ref_r</span><span class="op">, </span><span class="var">config</span><span class="op">.beta)</span></span></div>
+<div class="cl"><span class="ln">45</span><span class="ct">        <span class="var">loss</span><span class="op">.</span><span class="fn">backward</span><span class="op">(); </span><span class="var">optimizer</span><span class="op">.</span><span class="fn">step</span><span class="op">(); </span><span class="var">optimizer</span><span class="op">.</span><span class="fn">zero_grad</span><span class="op">()</span></span></div>
+`;
+
+document.getElementById('terminal-area').innerHTML = `
+<div class="tl"><span class="tp">❯ </span><span>python train_dpo.py --config configs/llama3-dpo.yaml</span></div>
+<div class="tl"><span class="tm">[INFO] Loading meta-llama/Llama-3.1-8B ... Parameters: 8.03B</span></div>
+<div class="tl"><span class="tm">[INFO] Dataset: open-instruct-preferences  |  32,768 pairs</span></div>
+<div class="tl"><span class="tm">Epoch 1/3: ████████████ 512/512  </span><span class="tr">loss: 0.6821</span><span class="tm">  </span><span class="ta">reward_margin: +0.124</span></div>
+<div class="tl"><span class="tm">Epoch 2/3: ████████████ 512/512  </span><span class="tr">loss: 0.5234</span><span class="tm">  </span><span class="ta">reward_margin: +0.287</span></div>
+<div class="tl"><span class="tm">Epoch 3/3: ████████░░░░ 374/512  </span><span class="tr">loss: 0.4912</span><span class="tm">  </span><span class="ta">reward_margin: +0.341</span><span class="blink"> ▌</span></div>
+`;
+
+const clock = new THREE.Clock();
+
+// ═══════════════════════════════════════════════════════
+//  ANIMATION LOOP
+// ═══════════════════════════════════════════════════════
+let elapsed = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  elapsed += dt;
+  const t = elapsed;
+
+  // Camera animation
+  if (camT < 1.0) {
+    camT = Math.min(camT + dt / 1.4, 1.0);
+    const e = easeInOut(camT);
+    camera.position.lerpVectors(camFrom.pos, camTo.pos, e);
+    camLook.lerpVectors(camFrom.look, camTo.look, e);
+    camera.lookAt(camLook);
+    if (camT >= 1.0) {
+      camState.animating = false;
+      if (camState.pendingDone) { camState.pendingDone(); camState.pendingDone = null; }
+    }
+  }
+
+  // Idle camera drift (room only)
+  if (camState.current === 'room' && !camState.animating) {
+    camera.position.y = 1.75 + Math.sin(t * 0.4) * 0.012;
+    camera.position.x = Math.sin(t * 0.25) * 0.06;
+    camera.lookAt(camLook.x + Math.sin(t * 0.3) * 0.02, camLook.y, camLook.z);
+  }
+
+  // Monitor glow pulse
+  monitorLight.intensity = 0.0;
+  animationMixers.forEach(mixer => mixer.update(dt));
+
+  renderer.render(scene, camera);
+}
+animate();
+
+// Update clock in menubar
+setInterval(() => {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes();
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  document.getElementById('mb-clock').textContent =
+    `${h % 12 || 12}:${String(m).padStart(2,'0')} ${ampm}`;
+}, 30000);
+
+// ═══════════════════════════════════════════════════════
+//  RESIZE
+// ═══════════════════════════════════════════════════════
+window.addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+
+// ═══════════════════════════════════════════════════════
+//  INTRO
+// ═══════════════════════════════════════════════════════
+function enterRoom() {
+  if (intro.style.display === 'none') return;
+  if (!introModelsReady) {
+    introEnterQueued = true;
+    if (introEnterHint) introEnterHint.textContent = 'loading... will enter automatically';
+    return;
+  }
+  hasEnteredRoom = true;
+  intro.classList.add('fade');
+  setTimeout(() => intro.style.display = 'none', 1300);
+}
+document.addEventListener('keydown', enterRoom, { once: true });
+intro.addEventListener('click', enterRoom, { once: true });
+</script>
+</body>
+</html>
