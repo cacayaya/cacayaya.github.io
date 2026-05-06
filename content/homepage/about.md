@@ -78,6 +78,10 @@ I’m a PhD candidate at [Purdue University](https://www.purdue.edu/) under the 
 * Apr, 2023. One paper accepted to **ICML 2023**.
 
 ## Publication List
+[**Addressing Performance Saturation for LLM RL via
+Precise Entropy Curve Control**](https://arxiv.org/pdf/2604.26326)\
+Bolian Li, **Yifan Wang**, Yi Ding, Anamika Lochab, Ananth Grama, Ruqi Zhang
+
 [**SARL: Label-Free Reinforcement Learning by Rewarding Reasoning Topology**](https://arxiv.org/abs/2603.27977)\
 **Yifan Wang**, Bolian Li, David Cho, Ruqi Zhang, Fanping Sui, Ananth Grama
 
